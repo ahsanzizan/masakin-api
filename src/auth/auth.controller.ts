@@ -1,6 +1,17 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 
+export class SingInDto {
+  username: string;
+  password: string;
+}
+
+export class SignUpDto {
+  username: string;
+  email: string;
+  password: string;
+}
+
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -20,15 +31,4 @@ export class AuthController {
       signUpDto.password,
     );
   }
-}
-
-export class SingInDto {
-  username: string;
-  password: string;
-}
-
-export class SignUpDto {
-  username: string;
-  email: string;
-  password: string;
 }
