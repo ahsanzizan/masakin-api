@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Prisma } from '@prisma/client';
 import { UsersService } from 'src/users/users.service';
@@ -12,6 +16,9 @@ export class AuthService {
   ) {}
 
   async signUp(username: string, email: string, password: string) {
+    const findUser = await this.usersService.findUserByUsername(username);
+    if (findUser) throw new ForbiddenException();
+
     const data: Prisma.UserCreateInput = {
       username,
       email,
