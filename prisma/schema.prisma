@@ -6,6 +6,31 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String         @id @default(uuid())
+  createdAt DateTime       @default(now())
+  username  String         @unique @db.VarChar(20)
+  email     String         @unique
+  password  String
+  bio       String?
+  followers Followership[] @relation("Followers")
+  following Followership[] @relation("Following")
+
+  @@index([username, email])
+  @@map("users")
+}
+
+model Followership {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  follower    User     @relation("Followers", fields: [followerId], references: [id])
+  followerId  String
+  following   User     @relation("Following", fields: [followingId], references: [id])
+  followingId String
+
+  @@map("followerships")
 }
