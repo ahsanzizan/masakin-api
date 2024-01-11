@@ -3,9 +3,7 @@ declare global {
     interface ProcessEnv {
       NODE_ENV: 'development' | 'production';
       DATABASE_URL: string;
-      SECRET_KEY: string;
-      SECRET_IV: string;
-      ENCRYPTION_METHOD: string;
+      SECRET_ENCRYPTION_SALT_OR_ROUNDS: string;
       JWT_SECRET: string;
     }
   }

@@ -1,49 +1,13 @@
-import crypto from 'crypto';
+import * as bcrypt from 'bcrypt';
 
-const { SECRET_KEY, SECRET_IV, ENCRYPTION_METHOD } = process.env;
+export async function encryptData(data: string) {
+  const { SECRET_ENCRYPTION_SALT_OR_ROUNDS } = process.env;
 
-if (!SECRET_KEY || !SECRET_IV || !ENCRYPTION_METHOD) {
-  throw new Error('secretKey, secretIV, and ecnryptionMethod are required');
+  const saltOrRounds = Number(SECRET_ENCRYPTION_SALT_OR_ROUNDS);
+
+  return await bcrypt.hash(data, saltOrRounds);
 }
 
-function getKeyAndIV() {
-  const key = crypto
-    .createHash('sha512')
-    .update(SECRET_KEY)
-    .digest('hex')
-    .substring(0, 32);
-  const encryptionIV = crypto
-    .createHash('sha512')
-    .update(SECRET_IV)
-    .digest('hex')
-    .substring(0, 16);
-
-  return { key, encryptionIV };
-}
-
-export function encryptData(data: string) {
-  const { key, encryptionIV } = getKeyAndIV();
-
-  const cipher = crypto.createCipheriv(ENCRYPTION_METHOD, key, encryptionIV);
-
-  return Buffer.from(
-    cipher.update(data, 'utf8', 'hex') + cipher.final('hex'),
-  ).toString('base64');
-}
-
-export function compareData(incomingData: string, encryptedData: string) {
-  const { key, encryptionIV } = getKeyAndIV();
-
-  const buff = Buffer.from(encryptedData, 'base64');
-  const decipher = crypto.createDecipheriv(
-    ENCRYPTION_METHOD,
-    key,
-    encryptionIV,
-  );
-  
-  const decrypted =
-    decipher.update(buff.toString('utf8'), 'hex', 'utf8') +
-    decipher.final('utf8');
-
-  return incomingData === decrypted;
+export async function compareData(incomingData: string, encryptedData: string) {
+  return await bcrypt.compare(incomingData, encryptedData);
 }

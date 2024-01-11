@@ -22,16 +22,18 @@ export class AuthService {
     const data: Prisma.UserCreateInput = {
       username,
       email,
-      password: encryptData(password),
+      password: await encryptData(password),
     };
 
-    await this.usersService.createUser(data);
+    return await this.usersService.createUser(data);
   }
 
   async signIn(username: string, pass: string) {
     const findUser = await this.usersService.findUserByUsername(username);
-    if (!findUser || compareData(pass, findUser.password))
-      throw new UnauthorizedException();
+    if (!findUser) throw new UnauthorizedException();
+
+    const correctPass = await compareData(pass, findUser.password);
+    if (!correctPass) throw new UnauthorizedException();
 
     const payload = { sub: findUser.id, username };
     return {
