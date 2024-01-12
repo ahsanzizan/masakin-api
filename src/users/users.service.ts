@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
-import { paginator } from 'src/prisma/paginator';
+import { Prisma, User } from '@prisma/client';
+import { PaginatedResult, paginator } from 'src/prisma/paginator';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 const paginate = paginator({ perPage: 10 });
@@ -13,8 +13,8 @@ export class UsersService {
     where?: Prisma.UserWhereInput,
     orderBy?: Prisma.UserOrderByWithRelationInput,
     page?: number,
-  ) {
-    return paginate(this.prisma.user, { where, orderBy }, { page });
+  ): Promise<PaginatedResult<User>> {
+    return paginate(this.prisma.user, { page }, { where, orderBy });
   }
 
   async findUserByUsername(username: string) {

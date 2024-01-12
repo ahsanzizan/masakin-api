@@ -16,21 +16,14 @@ export type PaginateOptions = {
 };
 export type PaginateFunction = <T, K>(
   model: any,
-  args?: K,
   options?: PaginateOptions,
+  args?: K,
 ) => Promise<PaginatedResult<T>>;
 
 export const paginator = (
   defaultOptions: PaginateOptions,
 ): PaginateFunction => {
-  return async <T>(
-    model: {
-      count: (args: any) => Promise<number>;
-      findMany: (args: any) => Promise<T[]>;
-    },
-    options,
-    args: any = { where: undefined },
-  ) => {
+  return async (model, options, args: any = { where: undefined }) => {
     const page = Number(options?.page ?? defaultOptions?.page) || 1;
     const perPage = Number(options?.perPage ?? defaultOptions?.perPage) || 10;
 
