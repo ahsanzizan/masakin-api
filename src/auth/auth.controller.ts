@@ -1,9 +1,17 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  UseInterceptors,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import SignInDto from './dto/signIn.dto';
 import SignUpDto from './dto/signUp.dto';
 import { AllowAnon } from './auth.decorator';
 import { ApiOperation } from '@nestjs/swagger';
+import { TransformInterceptor } from 'src/utils/interceptors/transform.interceptor';
 
 @Controller('auth')
 export class AuthController {
@@ -13,15 +21,17 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('login')
   @ApiOperation({ summary: 'User login' })
+  @UseInterceptors(TransformInterceptor)
   async signIn(@Body() credentials: SignInDto) {
     const result = await this.authService.signIn(
       credentials.username,
       credentials.password,
     );
+    const access_token = result.access_token;
 
     return {
       message: 'Logged in successfully',
-      result,
+      access_token,
     };
   }
 
@@ -29,6 +39,7 @@ export class AuthController {
   @HttpCode(HttpStatus.CREATED)
   @Post('register')
   @ApiOperation({ summary: 'User registration' })
+  @UseInterceptors(TransformInterceptor)
   async signUp(@Body() credentials: SignUpDto) {
     await this.authService.signUp(
       credentials.username,
