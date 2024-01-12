@@ -11,7 +11,10 @@ import SignInDto from './dto/signIn.dto';
 import SignUpDto from './dto/signUp.dto';
 import { AllowAnon } from './auth.decorator';
 import { ApiOperation } from '@nestjs/swagger';
-import { TransformInterceptor } from 'src/utils/interceptors/transform.interceptor';
+import {
+  ResponseTemplate,
+  TransformInterceptor,
+} from 'src/utils/interceptors/transform.interceptor';
 
 @Controller('auth')
 export class AuthController {
@@ -22,7 +25,9 @@ export class AuthController {
   @Post('login')
   @ApiOperation({ summary: 'User login' })
   @UseInterceptors(TransformInterceptor)
-  async signIn(@Body() credentials: SignInDto) {
+  async signIn(
+    @Body() credentials: SignInDto,
+  ): Promise<ResponseTemplate<{ access_token: string }>> {
     const result = await this.authService.signIn(
       credentials.username,
       credentials.password,
@@ -31,7 +36,7 @@ export class AuthController {
 
     return {
       message: 'Logged in successfully',
-      access_token,
+      data: { access_token },
     };
   }
 
@@ -40,13 +45,15 @@ export class AuthController {
   @Post('register')
   @ApiOperation({ summary: 'User registration' })
   @UseInterceptors(TransformInterceptor)
-  async signUp(@Body() credentials: SignUpDto) {
+  async signUp(
+    @Body() credentials: SignUpDto,
+  ): Promise<ResponseTemplate<null>> {
     await this.authService.signUp(
       credentials.username,
       credentials.email,
       credentials.password,
     );
 
-    return { message: 'Registered successfully' };
+    return { message: 'Registered successfully', data: null };
   }
 }
