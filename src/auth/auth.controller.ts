@@ -15,6 +15,7 @@ import {
   ResponseTemplate,
   TransformInterceptor,
 } from 'src/utils/interceptors/transform.interceptor';
+import { User } from '@prisma/client';
 
 @Controller('auth')
 export class AuthController {
@@ -27,16 +28,15 @@ export class AuthController {
   @UseInterceptors(TransformInterceptor)
   async signIn(
     @Body() credentials: SignInDto,
-  ): Promise<ResponseTemplate<{ access_token: string }>> {
+  ): Promise<ResponseTemplate<{ access_token: string; user: User }>> {
     const result = await this.authService.signIn(
       credentials.username,
       credentials.password,
     );
-    const access_token = result.access_token;
 
     return {
       message: 'Logged in successfully',
-      data: { access_token },
+      data: result,
     };
   }
 
