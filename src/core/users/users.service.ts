@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { paginator } from 'src/prisma/paginator';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { paginator } from 'src/lib/prisma/paginator';
+import { PrismaService } from 'src/lib/prisma/prisma.service';
 
 const paginate = paginator({ perPage: 10 });
 
