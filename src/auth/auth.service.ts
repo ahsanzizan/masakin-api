@@ -7,6 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Prisma } from '@prisma/client';
 import { UsersService } from 'src/users/users.service';
 import { compareData, encryptData } from 'src/utils/encryption.utils';
+import { AuthUser } from './auth.types';
 
 @Injectable()
 export class AuthService {
@@ -16,7 +17,7 @@ export class AuthService {
   ) {}
 
   async signUp(username: string, email: string, password: string) {
-    const findUser = await this.usersService.findUserByUsername(username);
+    const findUser = await this.usersService.findByUsername(username);
     if (findUser) throw new ForbiddenException();
 
     const data: Prisma.UserCreateInput = {
@@ -29,17 +30,22 @@ export class AuthService {
   }
 
   async signIn(username: string, pass: string) {
-    const findUser = await this.usersService.findUserByUsername(username);
+    const findUser = await this.usersService.findByUsername(username);
     if (!findUser) throw new UnauthorizedException();
 
     const correctPass = await compareData(pass, findUser.password);
     if (!correctPass) throw new UnauthorizedException();
 
-    const payload = { sub: findUser.id, username };
-    
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, id, bio, ...userInfo } = findUser;
+
+    const payload: AuthUser = {
+      sub: findUser.id,
+      ...userInfo,
+    };
+
     return {
       access_token: await this.jwtService.signAsync(payload),
-      user: findUser,
     };
   }
 }

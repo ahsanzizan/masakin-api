@@ -17,7 +17,7 @@ export class UsersService {
     return paginate(this.prisma.user, { page }, { where, orderBy });
   }
 
-  async findUserByUsername(username: string) {
+  async findByUsername(username: string) {
     return await this.prisma.user.findUnique({ where: { username } });
   }
 

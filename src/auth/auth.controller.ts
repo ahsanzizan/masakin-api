@@ -6,16 +6,15 @@ import {
   Post,
   UseInterceptors,
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import SignInDto from './dto/signIn.dto';
-import SignUpDto from './dto/signUp.dto';
-import { AllowAnon } from './auth.decorator';
 import { ApiOperation } from '@nestjs/swagger';
 import {
   ResponseTemplate,
   TransformInterceptor,
 } from 'src/utils/interceptors/transform.interceptor';
-import { User } from '@prisma/client';
+import { AllowAnon } from './auth.decorator';
+import { AuthService } from './auth.service';
+import SignInDto from './dto/signIn.dto';
+import SignUpDto from './dto/signUp.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -28,7 +27,7 @@ export class AuthController {
   @UseInterceptors(TransformInterceptor)
   async signIn(
     @Body() credentials: SignInDto,
-  ): Promise<ResponseTemplate<{ access_token: string; user: User }>> {
+  ): Promise<ResponseTemplate<{ access_token: string }>> {
     const result = await this.authService.signIn(
       credentials.username,
       credentials.password,
