@@ -35,7 +35,7 @@ export class AuthController {
 
     return {
       message: 'Logged in successfully',
-      data: result,
+      result: result,
     };
   }
 
@@ -53,6 +53,6 @@ export class AuthController {
       credentials.password,
     );
 
-    return { message: 'Registered successfully', data: null };
+    return { message: 'Registered successfully', result: null };
   }
 }

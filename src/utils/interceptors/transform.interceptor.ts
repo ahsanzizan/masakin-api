@@ -9,13 +9,13 @@ import { map } from 'rxjs/operators';
 
 export interface ResponseTemplate<T> {
   message: string;
-  data: T;
+  result: T;
 }
 
 interface Response<T> {
   message: string;
   statusCode: number;
-  data: T;
+  result: T;
 }
 
 @Injectable()
@@ -31,7 +31,7 @@ export class TransformInterceptor<T>
         message: data.message,
         statusCode: context.switchToHttp().getResponse<{ statusCode: number }>()
           .statusCode,
-        data: data.data,
+        result: data.result,
       })),
     );
   }
