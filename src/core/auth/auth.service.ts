@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Prisma } from '@prisma/client';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from 'src/core/users/users.service';
 import { compareData, encryptData } from 'src/utils/encryption.utils';
 import { AuthUser } from './auth.types';
 

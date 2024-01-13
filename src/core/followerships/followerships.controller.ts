@@ -12,9 +12,9 @@ import {
 import { ApiOperation } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
 import { DefaultArgs } from '@prisma/client/runtime/library';
-import { AuthUser } from 'src/auth/auth.types';
-import { User } from 'src/auth/user.decorator';
-import { PaginatedResult } from 'src/prisma/paginator';
+import { AuthUser } from 'src/core/auth/auth.types';
+import { User } from 'src/core/auth/user.decorator';
+import { PaginatedResult } from 'src/lib/prisma/paginator';
 import {
   ResponseTemplate,
   TransformInterceptor,
