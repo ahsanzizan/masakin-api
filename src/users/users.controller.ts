@@ -29,6 +29,6 @@ export class UsersController {
     const user = await this.usersService.getUser({ id });
     if (!user) throw new NotFoundException(`No user found with id: ${id}`);
 
-    return { message: 'Retrieved user successfully', data: user };
+    return { message: 'Retrieved user successfully', result: user };
   }
 }
