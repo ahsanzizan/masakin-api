@@ -17,8 +17,10 @@ export class UsersService {
     return paginate(this.prismaService.user, { page }, { where, orderBy });
   }
 
-  async findByUsername(username: string) {
-    return await this.prismaService.user.findUnique({ where: { username } });
+  async getUser(where: Prisma.UserWhereUniqueInput) {
+    const findUser = await this.prismaService.user.findUnique({ where });
+
+    return findUser;
   }
 
   async createUser(data: Prisma.UserCreateInput, include?: Prisma.UserInclude) {
