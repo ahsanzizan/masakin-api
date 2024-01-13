@@ -18,7 +18,7 @@ import SignUpDto from './dto/signUp.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
   @AllowAnon()
   @HttpCode(HttpStatus.OK)

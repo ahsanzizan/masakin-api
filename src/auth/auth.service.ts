@@ -12,8 +12,8 @@ import { AuthUser } from './auth.types';
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UsersService,
-    private jwtService: JwtService,
+    private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
   ) {}
 
   async signUp(username: string, email: string, password: string) {
