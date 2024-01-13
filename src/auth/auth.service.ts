@@ -36,8 +36,10 @@ export class AuthService {
     if (!correctPass) throw new UnauthorizedException();
 
     const payload = { sub: findUser.id, username };
+    
     return {
       access_token: await this.jwtService.signAsync(payload),
+      user: findUser,
     };
   }
 }
