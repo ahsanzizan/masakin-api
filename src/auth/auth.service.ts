@@ -17,7 +17,7 @@ export class AuthService {
   ) {}
 
   async signUp(username: string, email: string, password: string) {
-    const findUser = await this.usersService.findByUsername(username);
+    const findUser = await this.usersService.getUser({ username });
     if (findUser) throw new ForbiddenException();
 
     const data: Prisma.UserCreateInput = {
@@ -30,7 +30,7 @@ export class AuthService {
   }
 
   async signIn(username: string, pass: string) {
-    const findUser = await this.usersService.findByUsername(username);
+    const findUser = await this.usersService.getUser({ username });
     if (!findUser) throw new UnauthorizedException();
 
     const correctPass = await compareData(pass, findUser.password);
