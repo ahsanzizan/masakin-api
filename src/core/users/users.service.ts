@@ -14,7 +14,7 @@ export class UsersService {
     orderBy?: Prisma.UserOrderByWithRelationInput,
     page?: number,
   ) {
-    return paginate<typeof this.prismaService.user, Prisma.UserFindManyArgs>(
+    return await paginate<typeof this.prismaService.user, Prisma.UserFindManyArgs>(
       this.prismaService.user,
       { page },
       { where, orderBy },
