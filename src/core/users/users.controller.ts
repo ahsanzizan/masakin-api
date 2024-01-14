@@ -5,19 +5,35 @@ import {
   HttpStatus,
   NotFoundException,
   Param,
+  Query,
   UseInterceptors,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { User } from '@prisma/client';
 import { ApiOperation } from '@nestjs/swagger';
+import { Prisma, User } from '@prisma/client';
 import {
   ResponseTemplate,
   TransformInterceptor,
 } from 'src/utils/interceptors/transform.interceptor';
+import { UsersService } from './users.service';
+import { PaginatedResult } from 'src/lib/prisma/paginator';
+import { DefaultArgs } from '@prisma/client/runtime/library';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
+
+  @HttpCode(HttpStatus.OK)
+  @Get()
+  @ApiOperation({ summary: 'Get users' })
+  @UseInterceptors(TransformInterceptor)
+  async getFollowers(
+    @Query('page') page?: number,
+  ): Promise<
+    ResponseTemplate<PaginatedResult<Prisma.UserDelegate<DefaultArgs>>>
+  > {
+    const users = await this.usersService.getUsers({}, {}, page);
+    return { message: 'Retrieved users successfully', result: users };
+  }
 
   @HttpCode(HttpStatus.OK)
   @Get(':id')
