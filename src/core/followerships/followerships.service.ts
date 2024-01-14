@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { paginator } from 'src/lib/prisma/paginator';
 import { PrismaService } from 'src/lib/prisma/prisma.service';
+import { UserWithoutPassword } from 'src/utils/selector.utils';
 
 const paginate = paginator({ perPage: 20 });
 
@@ -16,7 +17,10 @@ export class FollowershipsService {
     >(
       this.prismaService.followership,
       { page },
-      { where: { followingId: userId }, include: { follower: true } },
+      {
+        where: { followingId: userId },
+        include: { follower: { select: UserWithoutPassword } },
+      },
     );
 
     return followers;
@@ -29,7 +33,10 @@ export class FollowershipsService {
     >(
       this.prismaService.followership,
       { page },
-      { where: { followerId: userId }, include: { following: true } },
+      {
+        where: { followerId: userId },
+        include: { following: { select: UserWithoutPassword } },
+      },
     );
 
     return followings;

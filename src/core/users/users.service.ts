@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { paginator } from 'src/lib/prisma/paginator';
 import { PrismaService } from 'src/lib/prisma/prisma.service';
+import { UserWithoutPassword } from 'src/utils/selector.utils';
 
 const paginate = paginator({ perPage: 10 });
 
@@ -9,28 +10,44 @@ const paginate = paginator({ perPage: 10 });
 export class UsersService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async getUsers(
-    where?: Prisma.UserWhereInput,
-    orderBy?: Prisma.UserOrderByWithRelationInput,
-    page?: number,
-  ) {
-    return await paginate<typeof this.prismaService.user, Prisma.UserFindManyArgs>(
+  async getUsers({
+    where,
+    orderBy,
+    page,
+  }: {
+    where?: Prisma.UserWhereInput;
+    orderBy?: Prisma.UserOrderByWithRelationInput;
+    page?: number;
+  }) {
+    return await paginate<
+      typeof this.prismaService.user,
+      Prisma.UserFindManyArgs
+    >(
       this.prismaService.user,
       { page },
-      { where, orderBy },
+      {
+        where,
+        orderBy,
+        select: UserWithoutPassword,
+      },
     );
   }
 
-  async getUser(where: Prisma.UserWhereUniqueInput) {
-    const findUser = await this.prismaService.user.findUnique({ where });
+  async getUser(
+    where: Prisma.UserWhereUniqueInput,
+    select?: Prisma.UserSelect,
+  ) {
+    const findUser = await this.prismaService.user.findUnique({
+      where,
+      select,
+    });
 
     return findUser;
   }
 
-  async createUser(data: Prisma.UserCreateInput, include?: Prisma.UserInclude) {
+  async createUser(data: Prisma.UserCreateInput) {
     await this.prismaService.user.create({
       data,
-      include,
     });
   }
 }
