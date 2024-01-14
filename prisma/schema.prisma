@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -19,9 +19,60 @@ model User {
   bio       String?
   followers Followership[] @relation("Followers")
   following Followership[] @relation("Following")
+  recipes   Recipe[]
+  comments  Comment[]
+  likes     Like[]
 
   @@index([username, email])
   @@map("users")
+}
+
+model Recipe {
+  id          String       @id @default(uuid())
+  title       String
+  description String?      @db.Text()
+  vegetarian  Boolean
+  vegan       Boolean
+  price       Float
+  healthy     Boolean
+  sustainable Boolean
+  servings    Int
+  dairyFree   Boolean
+  glutenFree  Boolean
+  ingredients Ingredient[]
+  imageUrl    String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  author      User         @relation(fields: [authorId], references: [id])
+  authorId    String
+  comments    Comment[]
+  Like        Like[]
+
+  @@map("recipes")
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  content   String
+  createdAt DateTime @default(now())
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String
+  recipe    Recipe   @relation(fields: [recipeId], references: [id])
+  recipeId  String
+
+  @@map("comments")
+}
+
+model Like {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  recipe    Recipe   @relation(fields: [recipeId], references: [id])
+  recipeId  String
+
+  @@unique([userId, recipeId])
+  @@map("likes")
 }
 
 model Followership {
@@ -34,4 +85,16 @@ model Followership {
 
   @@unique([followerId, followingId])
   @@map("followerships")
+}
+
+model Ingredient {
+  id        String @id @default(uuid())
+  name      String
+  amount    Int
+  unit      String
+  unitShort String
+  Recipe    Recipe @relation(fields: [recipeId], references: [id])
+  recipeId  String
+
+  @@map("ingredients")
 }
