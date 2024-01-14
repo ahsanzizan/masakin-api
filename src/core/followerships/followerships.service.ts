@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Followership, Prisma } from '@prisma/client';
 import { paginator } from 'src/lib/prisma/paginator';
 import { PrismaService } from 'src/lib/prisma/prisma.service';
 import { UserWithoutPassword } from 'src/utils/selector.utils';
@@ -12,7 +12,7 @@ export class FollowershipsService {
 
   async getFollowers(userId: string, page?: number) {
     const followers = await paginate<
-      typeof this.prismaService.followership,
+      Followership,
       Prisma.FollowershipFindManyArgs
     >(
       this.prismaService.followership,
@@ -28,7 +28,7 @@ export class FollowershipsService {
 
   async getFollowings(userId: string, page?: number) {
     const followings = await paginate<
-      typeof this.prismaService.followership,
+      Followership,
       Prisma.FollowershipFindManyArgs
     >(
       this.prismaService.followership,

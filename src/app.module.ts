@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { AuthModule } from './core/auth/auth.module';
-import { UsersModule } from './core/users/users.module';
-import { FollowershipsModule } from './core/followerships/followerships.module';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './core/auth/auth.module';
+import { FollowershipsModule } from './core/followerships/followerships.module';
+import { UsersModule } from './core/users/users.module';
 import { CloudinaryModule } from './lib/cloudinary/cloudinary.module';
 
 @Module({
@@ -13,7 +13,6 @@ import { CloudinaryModule } from './lib/cloudinary/cloudinary.module';
     CloudinaryModule,
     FollowershipsModule,
   ],
-  controllers: [],
   providers: [],
 })
 export class AppModule {}

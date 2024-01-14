@@ -10,8 +10,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
-import { Prisma } from '@prisma/client';
-import { DefaultArgs } from '@prisma/client/runtime/library';
+import { Followership } from '@prisma/client';
 import { AuthUser } from 'src/core/auth/auth.types';
 import { User } from 'src/core/auth/user.decorator';
 import { PaginatedResult } from 'src/lib/prisma/paginator';
@@ -32,9 +31,7 @@ export class FollowershipsController {
   async getFollowers(
     @User() user: AuthUser,
     @Query('page') page?: number,
-  ): Promise<
-    ResponseTemplate<PaginatedResult<Prisma.FollowershipDelegate<DefaultArgs>>>
-  > {
+  ): Promise<ResponseTemplate<PaginatedResult<Followership>>> {
     const followers = await this.followershipsService.getFollowers(
       user.sub,
       page,
@@ -49,9 +46,7 @@ export class FollowershipsController {
   async getFollowersByUserId(
     @Param('id') id: string,
     @Query('page') page?: number,
-  ): Promise<
-    ResponseTemplate<PaginatedResult<Prisma.FollowershipDelegate<DefaultArgs>>>
-  > {
+  ): Promise<ResponseTemplate<PaginatedResult<Followership>>> {
     const followers = await this.followershipsService.getFollowers(id, page);
     return { message: 'Retrieved followers successfully', result: followers };
   }
@@ -63,9 +58,7 @@ export class FollowershipsController {
   async getFollowings(
     @User() user: AuthUser,
     @Query('page') page?: number,
-  ): Promise<
-    ResponseTemplate<PaginatedResult<Prisma.FollowershipDelegate<DefaultArgs>>>
-  > {
+  ): Promise<ResponseTemplate<PaginatedResult<Followership>>> {
     const followings = await this.followershipsService.getFollowings(
       user.sub,
       page,
@@ -80,9 +73,7 @@ export class FollowershipsController {
   async getFollowingsByUserId(
     @Param('id') id: string,
     @Query('page') page?: number,
-  ): Promise<
-    ResponseTemplate<PaginatedResult<Prisma.FollowershipDelegate<DefaultArgs>>>
-  > {
+  ): Promise<ResponseTemplate<PaginatedResult<Followership>>> {
     const followings = await this.followershipsService.getFollowings(id, page);
     return { message: 'Retrieved followings successfully', result: followings };
   }
