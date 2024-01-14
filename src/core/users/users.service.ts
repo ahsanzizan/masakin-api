@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { paginator } from 'src/lib/prisma/paginator';
 import { PrismaService } from 'src/lib/prisma/prisma.service';
+import { UserWithoutPasswordType } from 'src/types/users.types';
 import { UserWithoutPassword } from 'src/utils/selector.utils';
 
 const paginate = paginator({ perPage: 10 });
@@ -19,10 +20,7 @@ export class UsersService {
     orderBy?: Prisma.UserOrderByWithRelationInput;
     page?: number;
   }) {
-    return await paginate<
-      typeof this.prismaService.user,
-      Prisma.UserFindManyArgs
-    >(
+    return await paginate<UserWithoutPasswordType, Prisma.UserFindManyArgs>(
       this.prismaService.user,
       { page },
       {
@@ -46,7 +44,7 @@ export class UsersService {
   }
 
   async createUser(data: Prisma.UserCreateInput) {
-    await this.prismaService.user.create({
+    return await this.prismaService.user.create({
       data,
     });
   }
