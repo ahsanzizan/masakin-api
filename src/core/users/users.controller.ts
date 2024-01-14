@@ -17,6 +17,7 @@ import {
 import { UsersService } from './users.service';
 import { PaginatedResult } from 'src/lib/prisma/paginator';
 import { DefaultArgs } from '@prisma/client/runtime/library';
+import { UserWithoutPassword } from 'src/utils/selector.utils';
 
 @Controller('users')
 export class UsersController {
@@ -31,7 +32,10 @@ export class UsersController {
   ): Promise<
     ResponseTemplate<PaginatedResult<Prisma.UserDelegate<DefaultArgs>>>
   > {
-    const users = await this.usersService.getUsers({}, {}, page);
+    const users = await this.usersService.getUsers({
+      page,
+    });
+
     return { message: 'Retrieved users successfully', result: users };
   }
 
@@ -42,7 +46,7 @@ export class UsersController {
   async findById(
     @Param('id') id: string,
   ): Promise<ResponseTemplate<User | null>> {
-    const user = await this.usersService.getUser({ id });
+    const user = await this.usersService.getUser({ id }, UserWithoutPassword);
     if (!user) throw new NotFoundException(`No user found with id: ${id}`);
 
     return { message: 'Retrieved user successfully', result: user };

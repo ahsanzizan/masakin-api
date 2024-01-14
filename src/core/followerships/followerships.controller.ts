@@ -88,7 +88,7 @@ export class FollowershipsController {
   }
 
   @HttpCode(HttpStatus.CREATED)
-  @Post('follow')
+  @Post('follow/:id')
   @ApiOperation({ summary: 'Follows a user' })
   @UseInterceptors(TransformInterceptor)
   async followUser(
@@ -101,8 +101,8 @@ export class FollowershipsController {
   }
 
   @HttpCode(HttpStatus.CREATED)
-  @Delete('follow')
-  @ApiOperation({ summary: 'Follows a user' })
+  @Delete('follow/:id')
+  @ApiOperation({ summary: 'Unfollows a user' })
   @UseInterceptors(TransformInterceptor)
   async unfollowUser(
     @Param('id') id: string,
