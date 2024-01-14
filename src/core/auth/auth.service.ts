@@ -1,6 +1,7 @@
 import {
   ForbiddenException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -17,8 +18,15 @@ export class AuthService {
   ) {}
 
   async signUp(username: string, email: string, password: string) {
-    const findUser = await this.usersService.getUser({ username });
-    if (findUser) throw new ForbiddenException();
+    const findWithUsername = await this.usersService.getUser({ username });
+    if (findWithUsername)
+      throw new ForbiddenException(
+        `User with username ${username} already exists`,
+      );
+
+    const findWithEmail = await this.usersService.getUser({ email });
+    if (findWithEmail)
+      throw new ForbiddenException(`User with email ${email} already exists`);
 
     const data: Prisma.UserCreateInput = {
       username,
@@ -31,10 +39,11 @@ export class AuthService {
 
   async signIn(username: string, pass: string) {
     const findUser = await this.usersService.getUser({ username });
-    if (!findUser) throw new UnauthorizedException();
+    if (!findUser)
+      throw new NotFoundException(`User with username ${username} not found`);
 
     const correctPass = await compareData(pass, findUser.password);
-    if (!correctPass) throw new UnauthorizedException();
+    if (!correctPass) throw new UnauthorizedException('Password is incorrect');
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, id, bio, ...userInfo } = findUser;
