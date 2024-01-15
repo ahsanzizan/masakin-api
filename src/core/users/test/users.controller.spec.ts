@@ -6,10 +6,13 @@ import { ResponseTemplate } from 'src/utils/interceptors/transform.interceptor';
 import { UsersController } from '../users.controller';
 import { UsersService } from '../users.service';
 import { paginatedUsersSeeder, userSeeder } from './fixtures';
+import { User } from '@prisma/client';
 
 const service = {
   getUsers: jest.fn().mockResolvedValue(paginatedUsersSeeder),
   getUser: jest.fn().mockResolvedValue(userSeeder),
+  updateUser: jest.fn(),
+  deleteUser: jest.fn(),
 };
 
 describe('UsersController', () => {
@@ -61,6 +64,54 @@ describe('UsersController', () => {
       await expect(controller.findById(userId)).rejects.toThrow(
         NotFoundException,
       );
+    });
+  });
+
+  describe('updateCurrentUser', () => {
+    it('should update the current user', async () => {
+      const updateUser: User = {
+        ...userSeeder,
+        bio: 'test',
+      };
+
+      service.updateUser.mockResolvedValue(updateUser);
+
+      const result: ResponseTemplate<User> = {
+        message: 'Updated user successfully',
+        result: updateUser,
+      };
+
+      expect(
+        await controller.updateCurrentUser(
+          {
+            sub: userSeeder.id,
+            username: userSeeder.username,
+            email: userSeeder.email,
+            createdAt: userSeeder.createdAt,
+          },
+          { bio: 'test' },
+        ),
+      ).toEqual(result);
+    });
+  });
+
+  describe('deleteCurrentUser', () => {
+    it('should delete the current user', async () => {
+      service.deleteUser.mockResolvedValue(userSeeder);
+
+      const result: ResponseTemplate<User> = {
+        message: 'Deleted user successfully',
+        result: userSeeder,
+      };
+
+      expect(
+        await controller.deleteCurrentUser({
+          sub: userSeeder.id,
+          username: userSeeder.username,
+          email: userSeeder.email,
+          createdAt: userSeeder.createdAt,
+        }),
+      ).toEqual(result);
     });
   });
 });

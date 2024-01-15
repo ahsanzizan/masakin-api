@@ -12,7 +12,7 @@ import {
 import { ApiOperation } from '@nestjs/swagger';
 import { Followership } from '@prisma/client';
 import { AuthUser } from 'src/core/auth/auth.types';
-import { User } from 'src/core/auth/user.decorator';
+import { UseAuth } from 'src/core/auth/user.decorator';
 import { PaginatedResult } from 'src/lib/prisma/paginator';
 import {
   ResponseTemplate,
@@ -29,7 +29,7 @@ export class FollowershipsController {
   @ApiOperation({ summary: "Get authenticated user's followers" })
   @UseInterceptors(TransformInterceptor)
   async getFollowers(
-    @User() user: AuthUser,
+    @UseAuth() user: AuthUser,
     @Query('page') page?: number,
   ): Promise<ResponseTemplate<PaginatedResult<Followership>>> {
     const followers = await this.followershipsService.getFollowers(
@@ -56,7 +56,7 @@ export class FollowershipsController {
   @ApiOperation({ summary: "Get authenticated user's followings" })
   @UseInterceptors(TransformInterceptor)
   async getFollowings(
-    @User() user: AuthUser,
+    @UseAuth() user: AuthUser,
     @Query('page') page?: number,
   ): Promise<ResponseTemplate<PaginatedResult<Followership>>> {
     const followings = await this.followershipsService.getFollowings(
@@ -84,7 +84,7 @@ export class FollowershipsController {
   @UseInterceptors(TransformInterceptor)
   async followUser(
     @Param('id') id: string,
-    @User() user: AuthUser,
+    @UseAuth() user: AuthUser,
   ): Promise<ResponseTemplate<null>> {
     await this.followershipsService.follow(user.sub, id);
 
@@ -97,7 +97,7 @@ export class FollowershipsController {
   @UseInterceptors(TransformInterceptor)
   async unfollowUser(
     @Param('id') id: string,
-    @User() user: AuthUser,
+    @UseAuth() user: AuthUser,
   ): Promise<ResponseTemplate<null>> {
     await this.followershipsService.unfollow(user.sub, id);
 

@@ -1,10 +1,13 @@
 import {
+  Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
   NotFoundException,
   Param,
+  Patch,
   Query,
   UseInterceptors,
 } from '@nestjs/common';
@@ -16,7 +19,11 @@ import {
   TransformInterceptor,
 } from 'src/utils/interceptors/transform.interceptor';
 import { UserWithoutPassword } from 'src/utils/selector.utils';
+import { AuthUser } from '../auth/auth.types';
+import { UseAuth } from '../auth/user.decorator';
+import { UpdateUserDto } from './dto/updateUser.dto';
 import { UsersService } from './users.service';
+import { User } from '@prisma/client';
 
 @Controller('users')
 export class UsersController {
@@ -47,5 +54,33 @@ export class UsersController {
     if (!user) throw new NotFoundException(`No user found with id: ${id}`);
 
     return { message: 'Retrieved user successfully', result: user };
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Patch()
+  @ApiOperation({ summary: 'Update user by id' })
+  @UseInterceptors(TransformInterceptor)
+  async updateCurrentUser(
+    @UseAuth() user: AuthUser,
+    @Body() data: UpdateUserDto,
+  ): Promise<ResponseTemplate<User>> {
+    const updateUser = await this.usersService.updateUser(
+      { id: user.sub },
+      data,
+    );
+
+    return { message: 'Updated user successfully', result: updateUser };
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Delete()
+  @ApiOperation({ summary: 'Delete user by id' })
+  @UseInterceptors(TransformInterceptor)
+  async deleteCurrentUser(
+    @UseAuth() user: AuthUser,
+  ): Promise<ResponseTemplate<User>> {
+    const deleteUser = await this.usersService.deleteUser({ id: user.sub });
+
+    return { message: 'Deleted user successfully', result: deleteUser };
   }
 }
