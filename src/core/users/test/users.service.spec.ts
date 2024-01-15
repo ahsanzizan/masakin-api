@@ -8,8 +8,8 @@ const db = {
     findMany: jest.fn(),
     findUnique: jest.fn(),
     create: jest.fn().mockReturnValue(userSeeder),
-    update: jest.fn().mockReturnValue(userSeeder),
-    delete: jest.fn().mockResolvedValue(userSeeder),
+    update: jest.fn(),
+    delete: jest.fn(),
     count: jest.fn().mockResolvedValue(paginatedUsersSeeder.data.length),
   },
 };
@@ -70,6 +70,33 @@ describe('UsersService', () => {
           username: userSeeder.username,
           email: userSeeder.email,
           password: userSeeder.password,
+        }),
+      ).resolves.toEqual(userSeeder);
+    });
+  });
+
+  describe('updateUser', () => {
+    it('should update the current user', () => {
+      db.user.update.mockReturnValue({ ...userSeeder, bio: 'test' });
+
+      expect(
+        service.updateUser(
+          {
+            id: userSeeder.id,
+          },
+          { bio: 'test' },
+        ),
+      ).resolves.toEqual({ ...userSeeder, bio: 'test' });
+    });
+  });
+
+  describe('deleteUser', () => {
+    it('should delete the current user', () => {
+      db.user.delete.mockResolvedValue(userSeeder);
+
+      expect(
+        service.deleteUser({
+          id: userSeeder.id,
         }),
       ).resolves.toEqual(userSeeder);
     });

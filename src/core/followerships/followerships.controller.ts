@@ -91,7 +91,7 @@ export class FollowershipsController {
     return { message: 'Created followership successfully', result: null };
   }
 
-  @HttpCode(HttpStatus.CREATED)
+  @HttpCode(HttpStatus.OK)
   @Delete('follow/:id')
   @ApiOperation({ summary: 'Unfollows a user' })
   @UseInterceptors(TransformInterceptor)
