@@ -12,6 +12,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
+import { User } from '@prisma/client';
 import { PaginatedResult } from 'src/lib/prisma/paginator';
 import { UserWithoutPasswordType } from 'src/types/users.types';
 import {
@@ -20,10 +21,9 @@ import {
 } from 'src/utils/interceptors/transform.interceptor';
 import { UserWithoutPassword } from 'src/utils/selector.utils';
 import { AuthUser } from '../auth/auth.types';
-import { UseAuth } from '../auth/user.decorator';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import { UsersService } from './users.service';
-import { User } from '@prisma/client';
+import { UseAuth } from '../auth/auth.decorator';
 
 @Controller('users')
 export class UsersController {

@@ -12,12 +12,12 @@ import {
 import { ApiOperation } from '@nestjs/swagger';
 import { Followership } from '@prisma/client';
 import { AuthUser } from 'src/core/auth/auth.types';
-import { UseAuth } from 'src/core/auth/user.decorator';
 import { PaginatedResult } from 'src/lib/prisma/paginator';
 import {
   ResponseTemplate,
   TransformInterceptor,
 } from 'src/utils/interceptors/transform.interceptor';
+import { UseAuth } from '../auth/auth.decorator';
 import { FollowershipsService } from './followerships.service';
 
 @Controller('followerships')
