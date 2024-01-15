@@ -7,6 +7,7 @@ import { UsersController } from '../users.controller';
 import { UsersService } from '../users.service';
 import { paginatedUsersSeeder, userSeeder } from './fixtures';
 import { User } from '@prisma/client';
+import { authUserMock } from 'src/utils/mocks/auth.mocks';
 
 const service = {
   getUsers: jest.fn().mockResolvedValue(paginatedUsersSeeder),
@@ -82,15 +83,7 @@ describe('UsersController', () => {
       };
 
       expect(
-        await controller.updateCurrentUser(
-          {
-            sub: userSeeder.id,
-            username: userSeeder.username,
-            email: userSeeder.email,
-            createdAt: userSeeder.createdAt,
-          },
-          { bio: 'test' },
-        ),
+        await controller.updateCurrentUser(authUserMock, { bio: 'test' }),
       ).toEqual(result);
     });
   });

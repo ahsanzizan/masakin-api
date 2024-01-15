@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Followership, Prisma } from '@prisma/client';
 import { paginator } from 'src/lib/prisma/paginator';
 import { PrismaService } from 'src/lib/prisma/prisma.service';
 import { UserWithoutPassword } from 'src/utils/selector.utils';
+import { validateUserById } from 'src/utils/validators.utils';
 
 const paginate = paginator({ perPage: 20 });
 
@@ -43,13 +44,19 @@ export class FollowershipsService {
   }
 
   async follow(followerId: string, followingId: string) {
-    await this.prismaService.followership.create({
+    if (!validateUserById(this.prismaService, followingId))
+      throw new NotFoundException(`No user found with id: ${followingId}`);
+
+    return await this.prismaService.followership.create({
       data: { followerId, followingId },
     });
   }
 
   async unfollow(followerId: string, followingId: string) {
-    await this.prismaService.followership.delete({
+    if (!validateUserById(this.prismaService, followingId))
+      throw new NotFoundException(`No user found with id: ${followingId}`);
+
+    return await this.prismaService.followership.delete({
       where: {
         followerId_followingId: {
           followerId,
