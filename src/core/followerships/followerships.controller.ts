@@ -7,16 +7,12 @@ import {
   Param,
   Post,
   Query,
-  UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { Followership } from '@prisma/client';
 import { AuthUser } from 'src/core/auth/auth.types';
 import { PaginatedResult } from 'src/lib/prisma/paginator';
-import {
-  ResponseTemplate,
-  TransformInterceptor,
-} from 'src/utils/interceptors/transform.interceptor';
+import { ResponseTemplate } from 'src/utils/interceptors/transform.interceptor';
 import { UseAuth } from '../auth/auth.decorator';
 import { FollowershipsService } from './followerships.service';
 
@@ -27,7 +23,6 @@ export class FollowershipsController {
   @HttpCode(HttpStatus.OK)
   @Get('followers')
   @ApiOperation({ summary: "Get authenticated user's followers" })
-  @UseInterceptors(TransformInterceptor)
   async getFollowers(
     @UseAuth() user: AuthUser,
     @Query('page') page?: number,
@@ -41,7 +36,6 @@ export class FollowershipsController {
   @HttpCode(HttpStatus.OK)
   @Get('followers/:id')
   @ApiOperation({ summary: "Get user's followers by id" })
-  @UseInterceptors(TransformInterceptor)
   async getFollowersByUserId(
     @Param('id') id: string,
     @Query('page') page?: number,
@@ -55,7 +49,6 @@ export class FollowershipsController {
   @HttpCode(HttpStatus.OK)
   @Get('followings')
   @ApiOperation({ summary: "Get authenticated user's followings" })
-  @UseInterceptors(TransformInterceptor)
   async getFollowings(
     @UseAuth() user: AuthUser,
     @Query('page') page?: number,
@@ -69,7 +62,6 @@ export class FollowershipsController {
   @HttpCode(HttpStatus.OK)
   @Get('followings/:id')
   @ApiOperation({ summary: "Get user's followings by id" })
-  @UseInterceptors(TransformInterceptor)
   async getFollowingsByUserId(
     @Param('id') id: string,
     @Query('page') page?: number,
@@ -83,7 +75,6 @@ export class FollowershipsController {
   @HttpCode(HttpStatus.CREATED)
   @Post('follow/:id')
   @ApiOperation({ summary: 'Follows a user' })
-  @UseInterceptors(TransformInterceptor)
   async followUser(
     @Param('id') id: string,
     @UseAuth() user: AuthUser,
@@ -96,7 +87,6 @@ export class FollowershipsController {
   @HttpCode(HttpStatus.OK)
   @Delete('follow/:id')
   @ApiOperation({ summary: 'Unfollows a user' })
-  @UseInterceptors(TransformInterceptor)
   async unfollowUser(
     @Param('id') id: string,
     @UseAuth() user: AuthUser,

@@ -1,16 +1,6 @@
-import {
-  Body,
-  Controller,
-  HttpCode,
-  HttpStatus,
-  Post,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
-import {
-  ResponseTemplate,
-  TransformInterceptor,
-} from 'src/utils/interceptors/transform.interceptor';
+import { ResponseTemplate } from 'src/utils/interceptors/transform.interceptor';
 import { AllowAnon } from './auth.decorator';
 import { AuthService } from './auth.service';
 import SignInDto from './dto/signIn.dto';
@@ -24,7 +14,6 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('login')
   @ApiOperation({ summary: 'User login' })
-  @UseInterceptors(TransformInterceptor)
   async signIn(
     @Body() credentials: SignInDto,
   ): Promise<ResponseTemplate<{ access_token: string }>> {
@@ -41,7 +30,6 @@ export class AuthController {
   @HttpCode(HttpStatus.CREATED)
   @Post('register')
   @ApiOperation({ summary: 'User registration' })
-  @UseInterceptors(TransformInterceptor)
   async signUp(
     @Body() credentials: SignUpDto,
   ): Promise<ResponseTemplate<null>> {

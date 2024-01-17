@@ -1,9 +1,10 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { LogLevel, ValidationPipe, VersioningType } from '@nestjs/common';
-import * as cookieParser from 'cookie-parser';
-import { LoggerInterceptor } from './utils/interceptors/logger.interceptor';
 import { ConfigService } from '@nestjs/config';
+import { NestFactory } from '@nestjs/core';
+import * as cookieParser from 'cookie-parser';
+import { AppModule } from './app.module';
+import { LoggerInterceptor } from './utils/interceptors/logger.interceptor';
+import { TransformInterceptor } from './utils/interceptors/transform.interceptor';
 
 async function bootstrap() {
   const isProduction = process.env.NODE_ENV === 'production';
@@ -19,7 +20,10 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
-  app.useGlobalInterceptors(new LoggerInterceptor());
+  app.useGlobalInterceptors(
+    new LoggerInterceptor(),
+    new TransformInterceptor(),
+  );
 
   app.enableVersioning({ type: VersioningType.URI });
 

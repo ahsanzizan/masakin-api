@@ -7,18 +7,14 @@ import {
   NotFoundException,
   Param,
   Query,
-  UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { Recipe } from '@prisma/client';
 import { PaginatedResult } from 'src/lib/prisma/paginator';
-import {
-  ResponseTemplate,
-  TransformInterceptor,
-} from 'src/utils/interceptors/transform.interceptor';
+import { ResponseTemplate } from 'src/utils/interceptors/transform.interceptor';
 import { validateEntityById } from 'src/utils/validators.utils';
-import { RecipesService } from './recipes.service';
 import { AllowAnon } from '../auth/auth.decorator';
+import { RecipesService } from './recipes.service';
 
 @Controller('recipes')
 export class RecipesController {
@@ -27,7 +23,6 @@ export class RecipesController {
   @HttpCode(HttpStatus.OK)
   @Get()
   @ApiOperation({ summary: 'Get recipes' })
-  @UseInterceptors(TransformInterceptor)
   async getAllRecipes(
     @Query('page') page?: number,
   ): Promise<ResponseTemplate<PaginatedResult<Recipe>>> {
@@ -42,7 +37,6 @@ export class RecipesController {
   @HttpCode(HttpStatus.OK)
   @Get(':id')
   @ApiOperation({ summary: 'Get recipe by id' })
-  @UseInterceptors(TransformInterceptor)
   async getRecipeById(
     @Param('id') id: string,
   ): Promise<ResponseTemplate<Recipe>> {
@@ -64,7 +58,6 @@ export class RecipesController {
   @HttpCode(HttpStatus.OK)
   @Delete(':id')
   @ApiOperation({ summary: 'Delete recipe by id' })
-  @UseInterceptors(TransformInterceptor)
   async deleteRecipeById(
     @Param('id') id: string,
   ): Promise<ResponseTemplate<Recipe>> {

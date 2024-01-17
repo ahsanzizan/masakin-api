@@ -9,21 +9,17 @@ import {
   Param,
   Patch,
   Query,
-  UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 import { PaginatedResult } from 'src/lib/prisma/paginator';
 import { UserWithoutPasswordType } from 'src/types/users.types';
-import {
-  ResponseTemplate,
-  TransformInterceptor,
-} from 'src/utils/interceptors/transform.interceptor';
+import { ResponseTemplate } from 'src/utils/interceptors/transform.interceptor';
 import { UserWithoutPassword } from 'src/utils/selector.utils';
+import { UseAuth } from '../auth/auth.decorator';
 import { AuthUser } from '../auth/auth.types';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import { UsersService } from './users.service';
-import { UseAuth } from '../auth/auth.decorator';
 
 @Controller('users')
 export class UsersController {
@@ -32,7 +28,6 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   @Get()
   @ApiOperation({ summary: 'Get users' })
-  @UseInterceptors(TransformInterceptor)
   async getUsers(
     @Query('page') page?: number,
   ): Promise<ResponseTemplate<PaginatedResult<UserWithoutPasswordType>>> {
@@ -47,7 +42,6 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   @Get(':id')
   @ApiOperation({ summary: 'Find user by id' })
-  @UseInterceptors(TransformInterceptor)
   async findById(
     @Param('id') id: string,
   ): Promise<ResponseTemplate<UserWithoutPasswordType>> {
@@ -60,7 +54,6 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   @Patch()
   @ApiOperation({ summary: 'Update user by id' })
-  @UseInterceptors(TransformInterceptor)
   async updateCurrentUser(
     @UseAuth() user: AuthUser,
     @Body() data: UpdateUserDto,
@@ -74,7 +67,6 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   @Delete()
   @ApiOperation({ summary: 'Delete user by id' })
-  @UseInterceptors(TransformInterceptor)
   async deleteCurrentUser(
     @UseAuth() user: AuthUser,
   ): Promise<ResponseTemplate<User>> {
