@@ -35,12 +35,10 @@ export class UsersService {
     where: Prisma.UserWhereUniqueInput,
     select?: Prisma.UserSelect,
   ) {
-    const findUser = await this.prismaService.user.findUnique({
+    return await this.prismaService.user.findUnique({
       where,
       select,
     });
-
-    return findUser;
   }
 
   async createUser(data: Prisma.UserCreateInput) {

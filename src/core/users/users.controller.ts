@@ -36,11 +36,12 @@ export class UsersController {
   async getUsers(
     @Query('page') page?: number,
   ): Promise<ResponseTemplate<PaginatedResult<UserWithoutPasswordType>>> {
-    const users = await this.usersService.getUsers({
-      page,
-    });
-
-    return { message: 'Retrieved users successfully', result: users };
+    return {
+      message: 'Retrieved users successfully',
+      result: await this.usersService.getUsers({
+        page,
+      }),
+    };
   }
 
   @HttpCode(HttpStatus.OK)
@@ -64,12 +65,10 @@ export class UsersController {
     @UseAuth() user: AuthUser,
     @Body() data: UpdateUserDto,
   ): Promise<ResponseTemplate<User>> {
-    const updateUser = await this.usersService.updateUser(
-      { id: user.sub },
-      data,
-    );
-
-    return { message: 'Updated user successfully', result: updateUser };
+    return {
+      message: 'Updated user successfully',
+      result: await this.usersService.updateUser({ id: user.sub }, data),
+    };
   }
 
   @HttpCode(HttpStatus.OK)
@@ -79,8 +78,9 @@ export class UsersController {
   async deleteCurrentUser(
     @UseAuth() user: AuthUser,
   ): Promise<ResponseTemplate<User>> {
-    const deleteUser = await this.usersService.deleteUser({ id: user.sub });
-
-    return { message: 'Deleted user successfully', result: deleteUser };
+    return {
+      message: 'Deleted user successfully',
+      result: await this.usersService.deleteUser({ id: user.sub }),
+    };
   }
 }

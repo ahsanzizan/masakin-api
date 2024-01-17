@@ -28,14 +28,12 @@ export class AuthController {
   async signIn(
     @Body() credentials: SignInDto,
   ): Promise<ResponseTemplate<{ access_token: string }>> {
-    const result = await this.authService.signIn(
-      credentials.username,
-      credentials.password,
-    );
-
     return {
       message: 'Logged in successfully',
-      result: result,
+      result: await this.authService.signIn(
+        credentials.username,
+        credentials.password,
+      ),
     };
   }
 
