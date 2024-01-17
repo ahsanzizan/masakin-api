@@ -1,12 +1,15 @@
+import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/lib/prisma/prisma.service';
 
-export async function validateUserById(
-  prismaService: PrismaService,
-  userId: string,
+export async function validateEntityById(
+  id: string,
+  entityModel: Prisma.ModelName,
 ) {
-  const findUser = await prismaService.user.findUnique({
-    where: { id: userId },
+  const prismaService = new PrismaService();
+  const findEntity = await prismaService[entityModel.toLowerCase()].findUnique({
+    where: { id },
   });
 
-  return Boolean(findUser);
+  console.log(findEntity);
+  return Boolean(findEntity);
 }

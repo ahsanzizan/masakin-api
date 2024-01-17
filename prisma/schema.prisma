@@ -12,12 +12,12 @@ datasource db {
 
 model User {
   id        String         @id @default(uuid())
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
   username  String         @unique @db.VarChar(20)
   email     String         @unique
   password  String
   bio       String?
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt()
   followers Followership[] @relation("Followers")
   following Followership[] @relation("Following")
   recipes   Recipe[]
@@ -29,25 +29,26 @@ model User {
 }
 
 model Recipe {
-  id          String       @id @default(uuid())
-  title       String
-  description String?      @db.Text()
-  vegetarian  Boolean
-  vegan       Boolean
-  price       Float
-  healthy     Boolean
-  sustainable Boolean
-  servings    Int
-  dairyFree   Boolean
-  glutenFree  Boolean
-  ingredients Ingredient[]
-  imageUrl    String
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  author      User         @relation(fields: [authorId], references: [id])
-  authorId    String
-  comments    Comment[]
-  Like        Like[]
+  id           String       @id @default(uuid())
+  title        String
+  description  String?      @db.Text()
+  vegetarian   Boolean
+  vegan        Boolean
+  cookDuration Int
+  price        Float
+  healthy      Boolean
+  sustainable  Boolean
+  servings     Int
+  dairyFree    Boolean
+  glutenFree   Boolean
+  ingredients  Ingredient[]
+  imageUrl     String
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt()
+  author       User         @relation(fields: [authorId], references: [id])
+  authorId     String
+  comments     Comment[]
+  Like         Like[]
 
   @@map("recipes")
 }

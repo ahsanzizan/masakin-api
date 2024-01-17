@@ -32,11 +32,10 @@ export class FollowershipsController {
     @UseAuth() user: AuthUser,
     @Query('page') page?: number,
   ): Promise<ResponseTemplate<PaginatedResult<Followership>>> {
-    const followers = await this.followershipsService.getFollowers(
-      user.sub,
-      page,
-    );
-    return { message: 'Retrieved followers successfully', result: followers };
+    return {
+      message: 'Retrieved followers successfully',
+      result: await this.followershipsService.getFollowers(user.sub, page),
+    };
   }
 
   @HttpCode(HttpStatus.OK)
@@ -47,8 +46,10 @@ export class FollowershipsController {
     @Param('id') id: string,
     @Query('page') page?: number,
   ): Promise<ResponseTemplate<PaginatedResult<Followership>>> {
-    const followers = await this.followershipsService.getFollowers(id, page);
-    return { message: 'Retrieved followers successfully', result: followers };
+    return {
+      message: 'Retrieved followers successfully',
+      result: await this.followershipsService.getFollowers(id, page),
+    };
   }
 
   @HttpCode(HttpStatus.OK)
@@ -59,11 +60,10 @@ export class FollowershipsController {
     @UseAuth() user: AuthUser,
     @Query('page') page?: number,
   ): Promise<ResponseTemplate<PaginatedResult<Followership>>> {
-    const followings = await this.followershipsService.getFollowings(
-      user.sub,
-      page,
-    );
-    return { message: 'Retrieved followings successfully', result: followings };
+    return {
+      message: 'Retrieved followings successfully',
+      result: await this.followershipsService.getFollowings(user.sub, page),
+    };
   }
 
   @HttpCode(HttpStatus.OK)
@@ -74,8 +74,10 @@ export class FollowershipsController {
     @Param('id') id: string,
     @Query('page') page?: number,
   ): Promise<ResponseTemplate<PaginatedResult<Followership>>> {
-    const followings = await this.followershipsService.getFollowings(id, page);
-    return { message: 'Retrieved followings successfully', result: followings };
+    return {
+      message: 'Retrieved followings successfully',
+      result: await this.followershipsService.getFollowings(id, page),
+    };
   }
 
   @HttpCode(HttpStatus.CREATED)

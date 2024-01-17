@@ -3,7 +3,7 @@ import { Followership, Prisma } from '@prisma/client';
 import { paginator } from 'src/lib/prisma/paginator';
 import { PrismaService } from 'src/lib/prisma/prisma.service';
 import { UserWithoutPassword } from 'src/utils/selector.utils';
-import { validateUserById } from 'src/utils/validators.utils';
+import { validateEntityById } from 'src/utils/validators.utils';
 
 const paginate = paginator({ perPage: 20 });
 
@@ -12,10 +12,7 @@ export class FollowershipsService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async getFollowers(userId: string, page?: number) {
-    const followers = await paginate<
-      Followership,
-      Prisma.FollowershipFindManyArgs
-    >(
+    return await paginate<Followership, Prisma.FollowershipFindManyArgs>(
       this.prismaService.followership,
       { page },
       {
@@ -23,15 +20,10 @@ export class FollowershipsService {
         include: { follower: { select: UserWithoutPassword } },
       },
     );
-
-    return followers;
   }
 
   async getFollowings(userId: string, page?: number) {
-    const followings = await paginate<
-      Followership,
-      Prisma.FollowershipFindManyArgs
-    >(
+    return await paginate<Followership, Prisma.FollowershipFindManyArgs>(
       this.prismaService.followership,
       { page },
       {
@@ -39,12 +31,10 @@ export class FollowershipsService {
         include: { following: { select: UserWithoutPassword } },
       },
     );
-
-    return followings;
   }
 
   async follow(followerId: string, followingId: string) {
-    if (!validateUserById(this.prismaService, followingId))
+    if (!(await validateEntityById(followingId, 'User')))
       throw new NotFoundException(`No user found with id: ${followingId}`);
 
     return await this.prismaService.followership.create({
@@ -53,7 +43,7 @@ export class FollowershipsService {
   }
 
   async unfollow(followerId: string, followingId: string) {
-    if (!validateUserById(this.prismaService, followingId))
+    if (!(await validateEntityById(followingId, 'User')))
       throw new NotFoundException(`No user found with id: ${followingId}`);
 
     return await this.prismaService.followership.delete({
