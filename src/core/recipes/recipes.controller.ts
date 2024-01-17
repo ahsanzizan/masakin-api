@@ -1,5 +1,6 @@
 import {
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -60,16 +61,19 @@ export class RecipesController {
     return await validateEntityById(id, 'Recipe');
   }
 
-  // @HttpCode(HttpStatus.OK)
-  // @Delete(':id')
-  // @ApiOperation({ summary: 'Delete recipe by id' })
-  // @UseInterceptors(TransformInterceptor)
-  // async deleteRecipeById(
-  //   @Param('id') id: string,
-  // ): Promise<ResponseTemplate<Recipe>> {
-  //   return {
-  //     message: 'Retrieved recipe successfully',
-  //     result: recipe,
-  //   };
-  // }
+  @HttpCode(HttpStatus.OK)
+  @Delete(':id')
+  @ApiOperation({ summary: 'Delete recipe by id' })
+  @UseInterceptors(TransformInterceptor)
+  async deleteRecipeById(
+    @Param('id') id: string,
+  ): Promise<ResponseTemplate<Recipe>> {
+    if (!(await validateEntityById(id, 'Recipe')))
+      throw new NotFoundException(`No recipe with id: ${id}`);
+
+    return {
+      message: 'Retrieved recipe successfully',
+      result: await this.recipesService.deleteRecipe({ id }),
+    };
+  }
 }
