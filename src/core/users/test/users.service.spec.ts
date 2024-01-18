@@ -76,7 +76,7 @@ describe('UsersService', () => {
   });
 
   describe('updateUser', () => {
-    it('should update the current user', () => {
+    it('should update the current authorized user', () => {
       db.user.update.mockReturnValue({ ...userSeeder, bio: 'test' });
 
       expect(
@@ -91,7 +91,7 @@ describe('UsersService', () => {
   });
 
   describe('deleteUser', () => {
-    it('should delete the current user', () => {
+    it('should delete the current authorized user', () => {
       db.user.delete.mockResolvedValue(userSeeder);
 
       expect(

@@ -32,7 +32,7 @@ describe('FollowershipsController', () => {
   });
 
   describe('getFollowers', () => {
-    it("should return the current user's followers", async () => {
+    it("should return the current authorized user's followers", async () => {
       const result: ResponseTemplate<PaginatedResult<Followership>> = {
         message: 'Retrieved followers successfully',
         result: paginatedFollowershipsSeeder,
@@ -43,7 +43,7 @@ describe('FollowershipsController', () => {
   });
 
   describe('getFollowings', () => {
-    it("should return the current user's followings", async () => {
+    it("should return the current authorized user's followings", async () => {
       const result: ResponseTemplate<PaginatedResult<Followership>> = {
         message: 'Retrieved followings successfully',
         result: paginatedFollowershipsSeeder,

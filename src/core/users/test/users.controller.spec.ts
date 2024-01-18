@@ -71,7 +71,7 @@ describe('UsersController', () => {
   });
 
   describe('updateCurrentUser', () => {
-    it('should update the current user', async () => {
+    it('should update the current authorized user', async () => {
       const updateUser: User = {
         ...userSeeder,
         bio: 'test',
@@ -91,7 +91,7 @@ describe('UsersController', () => {
   });
 
   describe('deleteCurrentUser', () => {
-    it('should delete the current user', async () => {
+    it('should delete the current authorized user', async () => {
       service.deleteUser.mockResolvedValue(userSeeder);
 
       const result: ResponseTemplate<User> = {

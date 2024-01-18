@@ -22,7 +22,7 @@ export class FollowershipsController {
 
   @HttpCode(HttpStatus.OK)
   @Get('followers')
-  @ApiOperation({ summary: "Get authenticated user's followers" })
+  @ApiOperation({ summary: "Get authorized user's followers" })
   async getFollowers(
     @UseAuth() user: AuthUser,
     @Query('page') page?: number,
@@ -48,7 +48,7 @@ export class FollowershipsController {
 
   @HttpCode(HttpStatus.OK)
   @Get('followings')
-  @ApiOperation({ summary: "Get authenticated user's followings" })
+  @ApiOperation({ summary: "Get authorized user's followings" })
   async getFollowings(
     @UseAuth() user: AuthUser,
     @Query('page') page?: number,

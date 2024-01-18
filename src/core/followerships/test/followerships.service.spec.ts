@@ -60,7 +60,7 @@ describe('FollowershipsService', () => {
   });
 
   describe('getFollowings', () => {
-    it('should return the followings of the current authenticated user', async () => {
+    it('should return the followings of the current authorized user', async () => {
       db.followership.findMany.mockResolvedValue(followershipsSeeder);
 
       const result = paginatedFollowershipsSeeder;
