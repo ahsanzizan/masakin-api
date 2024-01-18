@@ -10,6 +10,7 @@ import {
   Patch,
   Query,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
@@ -24,6 +25,7 @@ import { UpdateUserDto } from './dto/updateUser.dto';
 import { UsersService } from './users.service';
 import { CloudinaryService } from 'src/lib/cloudinary/cloudinary.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { FileSizeGuard } from 'src/utils/guards/fileSize.guard';
 
 @Controller('users')
 export class UsersController {
@@ -59,14 +61,15 @@ export class UsersController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @Patch()
-  @ApiOperation({ summary: 'Update current authenticated user' })
+  @Patch('me')
+  @ApiOperation({ summary: 'Update current authorized user' })
+  @UseGuards(new FileSizeGuard(5 * 1024 * 1024))
   @UseInterceptors(FileInterceptor('avatar'))
   async updateCurrentUser(
     @UseAuth() user: AuthUser,
     @Body() data: UpdateUserDto,
     @UploadedFile() avatar?: Express.Multer.File,
-  ): Promise<ResponseTemplate<User>> {
+  ) {
     const userUpdateData: Prisma.UserUpdateInput = { ...data, avatar: null };
 
     if (avatar) {
@@ -86,8 +89,8 @@ export class UsersController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @Delete()
-  @ApiOperation({ summary: 'Delete user by id' })
+  @Delete('me')
+  @ApiOperation({ summary: 'Delete current authorized user by id' })
   async deleteCurrentUser(
     @UseAuth() user: AuthUser,
   ): Promise<ResponseTemplate<User>> {

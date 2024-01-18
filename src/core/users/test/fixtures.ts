@@ -11,6 +11,7 @@ export const usersSeeder: User[] = [
     createdAt: new Date(),
     password: 'testing',
     bio: null,
+    avatar: null,
   },
   {
     id: '20d1c5a7-febf-4600-a64f-35fx68041cc5',
@@ -20,6 +21,7 @@ export const usersSeeder: User[] = [
     createdAt: new Date(),
     password: 'testing',
     bio: null,
+    avatar: null,
   },
   {
     id: '70d1d5n7-feby-46a0-b6nf-3dfa68041cc5',
@@ -29,6 +31,7 @@ export const usersSeeder: User[] = [
     createdAt: new Date(),
     password: 'testing',
     bio: null,
+    avatar: null,
   },
 ];
 
