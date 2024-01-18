@@ -16,8 +16,9 @@ model User {
   email     String         @unique
   password  String
   bio       String?
+  avatar    String?
   createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt()
+  updatedAt DateTime?      @updatedAt
   followers Followership[] @relation("Followers")
   following Followership[] @relation("Following")
   recipes   Recipe[]
@@ -44,7 +45,7 @@ model Recipe {
   ingredients  Ingredient[]
   imageUrl     String
   createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt()
+  updatedAt    DateTime?    @updatedAt
   author       User         @relation(fields: [authorId], references: [id])
   authorId     String
   comments     Comment[]
