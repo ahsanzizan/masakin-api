@@ -8,6 +8,7 @@ import { UsersService } from '../users.service';
 import { paginatedUsersSeeder, userSeeder } from './fixtures';
 import { User } from '@prisma/client';
 import { authUserMock } from 'src/utils/mocks/auth.mocks';
+import { CloudinaryService } from 'src/lib/cloudinary/cloudinary.service';
 
 const service = {
   getUsers: jest.fn().mockResolvedValue(paginatedUsersSeeder),
@@ -27,6 +28,7 @@ describe('UsersController', () => {
           provide: UsersService,
           useValue: service,
         },
+        CloudinaryService,
       ],
     }).compile();
 

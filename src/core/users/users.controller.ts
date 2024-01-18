@@ -9,9 +9,11 @@ import {
   Param,
   Patch,
   Query,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
-import { User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { PaginatedResult } from 'src/lib/prisma/paginator';
 import { UserWithoutPasswordType } from 'src/types/users.types';
 import { ResponseTemplate } from 'src/utils/interceptors/transform.interceptor';
@@ -20,10 +22,15 @@ import { UseAuth } from '../auth/auth.decorator';
 import { AuthUser } from '../auth/auth.types';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import { UsersService } from './users.service';
+import { CloudinaryService } from 'src/lib/cloudinary/cloudinary.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly cloudinaryService: CloudinaryService,
+  ) {}
 
   @HttpCode(HttpStatus.OK)
   @Get()
@@ -53,14 +60,28 @@ export class UsersController {
 
   @HttpCode(HttpStatus.OK)
   @Patch()
-  @ApiOperation({ summary: 'Update user by id' })
+  @ApiOperation({ summary: 'Update current authenticated user' })
+  @UseInterceptors(FileInterceptor('avatar'))
   async updateCurrentUser(
     @UseAuth() user: AuthUser,
     @Body() data: UpdateUserDto,
+    @UploadedFile() avatar?: Express.Multer.File,
   ): Promise<ResponseTemplate<User>> {
+    const userUpdateData: Prisma.UserUpdateInput = { ...data, avatar: null };
+
+    if (avatar) {
+      const uploadAvatarToCloudinary =
+        await this.cloudinaryService.uploadImage(avatar);
+      const avatarUrl = uploadAvatarToCloudinary.url as string;
+      userUpdateData.avatar = avatarUrl;
+    }
+
     return {
       message: 'Updated user successfully',
-      result: await this.usersService.updateUser({ id: user.sub }, data),
+      result: await this.usersService.updateUser(
+        { id: user.sub },
+        userUpdateData,
+      ),
     };
   }
 
