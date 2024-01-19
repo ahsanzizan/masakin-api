@@ -1,7 +1,6 @@
 import {
   BadRequestException,
   Body,
-  ConflictException,
   Controller,
   Delete,
   Get,
@@ -14,7 +13,7 @@ import {
   UnauthorizedException,
   UploadedFile,
   UseGuards,
-  UseInterceptors,
+  UseInterceptors
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiOperation } from '@nestjs/swagger';
@@ -79,9 +78,7 @@ export class RecipesController {
       .catch(() => {
         throw new BadRequestException('Invalid file type');
       });
-    const imageUrl = uploadImageToCloudinary.url as string | undefined;
-
-    if (!imageUrl) throw new ConflictException();
+    const imageUrl = uploadImageToCloudinary.url as string;
 
     const recipeData: Prisma.RecipeCreateInput = {
       author: { connect: { id: user.sub } },
