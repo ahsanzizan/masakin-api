@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -73,8 +74,11 @@ export class UsersController {
     const userUpdateData: Prisma.UserUpdateInput = { ...data, avatar: null };
 
     if (avatar) {
-      const uploadAvatarToCloudinary =
-        await this.cloudinaryService.uploadImage(avatar);
+      const uploadAvatarToCloudinary = await this.cloudinaryService
+        .uploadImage(avatar)
+        .catch(() => {
+          throw new BadRequestException('Invalid file type');
+        });
       const avatarUrl = uploadAvatarToCloudinary.url as string;
       userUpdateData.avatar = avatarUrl;
     }

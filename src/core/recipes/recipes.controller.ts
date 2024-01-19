@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   ConflictException,
   Controller,
@@ -17,7 +18,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiOperation } from '@nestjs/swagger';
-import { Recipe } from '@prisma/client';
+import { Prisma, Recipe } from '@prisma/client';
 import { CloudinaryService } from 'src/lib/cloudinary/cloudinary.service';
 import { PaginatedResult } from 'src/lib/prisma/paginator';
 import { FileSizeGuard } from 'src/utils/guards/fileSize.guard';
@@ -73,13 +74,16 @@ export class RecipesController {
     @Body() data: CreateRecipeDto,
     @UploadedFile() image: Express.Multer.File,
   ): Promise<ResponseTemplate<Recipe>> {
-    const uploadImageToCloudinary =
-      await this.cloudinaryService.uploadImage(image);
+    const uploadImageToCloudinary = await this.cloudinaryService
+      .uploadImage(image)
+      .catch(() => {
+        throw new BadRequestException('Invalid file type');
+      });
     const imageUrl = uploadImageToCloudinary.url as string | undefined;
 
     if (!imageUrl) throw new ConflictException();
 
-    const recipeData = {
+    const recipeData: Prisma.RecipeCreateInput = {
       author: { connect: { id: user.sub } },
       title: data.title,
       description: data.description ?? null,
