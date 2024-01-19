@@ -8,12 +8,13 @@ import {
   HttpStatus,
   NotFoundException,
   Param,
+  Patch,
   Post,
   Query,
   UnauthorizedException,
   UploadedFile,
   UseGuards,
-  UseInterceptors
+  UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiOperation } from '@nestjs/swagger';
@@ -26,6 +27,7 @@ import { UseAuth } from '../auth/auth.decorator';
 import { AuthUser } from '../auth/auth.types';
 import { CreateRecipeDto } from './dto/createRecipe.dto';
 import { RecipesService } from './recipes.service';
+import { UpdateRecipeDto } from './dto/updateRecipe.dto';
 
 @Controller('recipes')
 export class RecipesController {
@@ -98,6 +100,53 @@ export class RecipesController {
     };
 
     const result = await this.recipesService.createRecipe(recipeData);
+
+    return {
+      message: 'Created recipe successfully',
+      result,
+    };
+  }
+
+  @HttpCode(HttpStatus.CREATED)
+  @Patch(':id')
+  @ApiOperation({ summary: 'Update a recipe' })
+  @UseGuards(new FileSizeGuard(5 * 1024 * 1024))
+  @UseInterceptors(FileInterceptor('image'))
+  async updateRecipe(
+    @UseAuth() user: AuthUser,
+    @Body() data: UpdateRecipeDto,
+    @Param('id') id: string,
+    @UploadedFile() image?: Express.Multer.File,
+  ): Promise<ResponseTemplate<Recipe>> {
+    const recipeData: Prisma.RecipeUpdateInput = {
+      author: { connect: { id: user.sub } },
+      title: data.title,
+      description: data.description ?? null,
+      vegetarian: Boolean(data.vegetarian),
+      vegan: Boolean(data.vegan),
+      cookDuration: data.cookDuration,
+      price: data.price,
+      healthy: Boolean(data.healthy),
+      sustainable: Boolean(data.sustainable),
+      servings: data.servings,
+      dairyFree: Boolean(data.dairyFree),
+      glutenFree: Boolean(data.glutenFree),
+      ingredients: {
+        updateMany: { where: { recipeId: id }, data: data.ingredients },
+      },
+    };
+
+    if (image) {
+      const uploadImageToCloudinary = await this.cloudinaryService
+        .uploadImage(image)
+        .catch(() => {
+          throw new BadRequestException('Invalid file type');
+        });
+      const imageUrl = uploadImageToCloudinary.url as string;
+      recipeData.imageUrl = imageUrl;
+    }
+
+    const result = await this.recipesService.updateRecipe({ id }, recipeData);
 
     return {
       message: 'Created recipe successfully',
