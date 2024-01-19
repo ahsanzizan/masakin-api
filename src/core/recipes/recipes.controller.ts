@@ -17,7 +17,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { Prisma, Recipe } from '@prisma/client';
 import { CloudinaryService } from 'src/lib/cloudinary/cloudinary.service';
 import { PaginatedResult } from 'src/lib/prisma/paginator';
@@ -38,7 +38,8 @@ export class RecipesController {
 
   @HttpCode(HttpStatus.OK)
   @Get()
-  @ApiOperation({ summary: 'Get recipes' })
+  @ApiOperation({ summary: 'Get all recipes (paginated)', tags: ['recipes'] })
+  @ApiQuery({ name: 'page', type: String, required: false })
   async getAllRecipes(
     @Query('page') page?: number,
   ): Promise<ResponseTemplate<PaginatedResult<Recipe>>> {
@@ -52,7 +53,7 @@ export class RecipesController {
 
   @HttpCode(HttpStatus.OK)
   @Get(':id')
-  @ApiOperation({ summary: 'Get recipe by id' })
+  @ApiOperation({ summary: 'Get a recipe by id', tags: ['recipes'] })
   async getRecipeById(
     @Param('id') id: string,
   ): Promise<ResponseTemplate<Recipe>> {
@@ -67,7 +68,7 @@ export class RecipesController {
 
   @HttpCode(HttpStatus.CREATED)
   @Post()
-  @ApiOperation({ summary: 'Create a new recipe' })
+  @ApiOperation({ summary: 'Create a new recipe', tags: ['recipes'] })
   @UseGuards(new FileSizeGuard(5 * 1024 * 1024))
   @UseInterceptors(FileInterceptor('image'))
   async createRecipe(
@@ -107,9 +108,9 @@ export class RecipesController {
     };
   }
 
-  @HttpCode(HttpStatus.CREATED)
+  @HttpCode(HttpStatus.OK)
   @Patch(':id')
-  @ApiOperation({ summary: 'Update a recipe' })
+  @ApiOperation({ summary: 'Update a recipe', tags: ['recipes'] })
   @UseGuards(new FileSizeGuard(5 * 1024 * 1024))
   @UseInterceptors(FileInterceptor('image'))
   async updateRecipe(
@@ -154,7 +155,7 @@ export class RecipesController {
 
   @HttpCode(HttpStatus.OK)
   @Delete(':id')
-  @ApiOperation({ summary: 'Delete recipe by id' })
+  @ApiOperation({ summary: 'Delete recipe by id', tags: ['recipes'] })
   async deleteRecipeById(
     @Param('id') id: string,
     @UseAuth() user: AuthUser,

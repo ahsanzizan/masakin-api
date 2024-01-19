@@ -14,7 +14,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { Prisma, User } from '@prisma/client';
 import { PaginatedResult } from 'src/lib/prisma/paginator';
 import { UserWithoutPasswordType } from 'src/types/users.types';
@@ -37,7 +37,8 @@ export class UsersController {
 
   @HttpCode(HttpStatus.OK)
   @Get()
-  @ApiOperation({ summary: 'Get users' })
+  @ApiOperation({ summary: 'Get all users (paginated)', tags: ['users'] })
+  @ApiQuery({ name: 'page', type: String, required: false })
   async getUsers(
     @Query('page') page?: number,
   ): Promise<ResponseTemplate<PaginatedResult<UserWithoutPasswordType>>> {
@@ -51,7 +52,7 @@ export class UsersController {
 
   @HttpCode(HttpStatus.OK)
   @Get(':id')
-  @ApiOperation({ summary: 'Find user by id' })
+  @ApiOperation({ summary: 'Get a user by id', tags: ['users'] })
   async findById(
     @Param('id') id: string,
   ): Promise<ResponseTemplate<UserWithoutPasswordType>> {
@@ -63,7 +64,7 @@ export class UsersController {
 
   @HttpCode(HttpStatus.OK)
   @Patch('me')
-  @ApiOperation({ summary: 'Update current authorized user' })
+  @ApiOperation({ summary: 'Update current authorized user', tags: ['users'] })
   @UseGuards(new FileSizeGuard(5 * 1024 * 1024))
   @UseInterceptors(FileInterceptor('avatar'))
   async updateCurrentUser(
@@ -94,7 +95,10 @@ export class UsersController {
 
   @HttpCode(HttpStatus.OK)
   @Delete('me')
-  @ApiOperation({ summary: 'Delete current authorized user by id' })
+  @ApiOperation({
+    summary: 'Delete current authorized user by id',
+    tags: ['users'],
+  })
   async deleteCurrentUser(
     @UseAuth() user: AuthUser,
   ): Promise<ResponseTemplate<User>> {

@@ -8,7 +8,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { Followership } from '@prisma/client';
 import { AuthUser } from 'src/core/auth/auth.types';
 import { PaginatedResult } from 'src/lib/prisma/paginator';
@@ -22,7 +22,11 @@ export class FollowershipsController {
 
   @HttpCode(HttpStatus.OK)
   @Get('followers')
-  @ApiOperation({ summary: "Get authorized user's followers" })
+  @ApiOperation({
+    summary: "Get current authorized user's followers",
+    tags: ['followerships'],
+  })
+  @ApiQuery({ name: 'page', type: String, required: false })
   async getFollowers(
     @UseAuth() user: AuthUser,
     @Query('page') page?: number,
@@ -35,7 +39,11 @@ export class FollowershipsController {
 
   @HttpCode(HttpStatus.OK)
   @Get('followers/:id')
-  @ApiOperation({ summary: "Get user's followers by id" })
+  @ApiOperation({
+    summary: "Get user's followers by id",
+    tags: ['followerships'],
+  })
+  @ApiQuery({ name: 'page', type: String, required: false })
   async getFollowersByUserId(
     @Param('id') id: string,
     @Query('page') page?: number,
@@ -48,7 +56,11 @@ export class FollowershipsController {
 
   @HttpCode(HttpStatus.OK)
   @Get('followings')
-  @ApiOperation({ summary: "Get authorized user's followings" })
+  @ApiOperation({
+    summary: "Get current authorized user's followings",
+    tags: ['followerships'],
+  })
+  @ApiQuery({ name: 'page', type: String, required: false })
   async getFollowings(
     @UseAuth() user: AuthUser,
     @Query('page') page?: number,
@@ -61,7 +73,11 @@ export class FollowershipsController {
 
   @HttpCode(HttpStatus.OK)
   @Get('followings/:id')
-  @ApiOperation({ summary: "Get user's followings by id" })
+  @ApiOperation({
+    summary: "Get a user's followings by id",
+    tags: ['followerships'],
+  })
+  @ApiQuery({ name: 'page', type: String, required: false })
   async getFollowingsByUserId(
     @Param('id') id: string,
     @Query('page') page?: number,
@@ -74,7 +90,7 @@ export class FollowershipsController {
 
   @HttpCode(HttpStatus.CREATED)
   @Post('follow/:id')
-  @ApiOperation({ summary: 'Follows a user' })
+  @ApiOperation({ summary: 'Follows a user', tags: ['followerships'] })
   async followUser(
     @Param('id') id: string,
     @UseAuth() user: AuthUser,
@@ -86,7 +102,7 @@ export class FollowershipsController {
 
   @HttpCode(HttpStatus.OK)
   @Delete('follow/:id')
-  @ApiOperation({ summary: 'Unfollows a user' })
+  @ApiOperation({ summary: 'Unfollows a user', tags: ['followerships'] })
   async unfollowUser(
     @Param('id') id: string,
     @UseAuth() user: AuthUser,

@@ -13,7 +13,7 @@ export class AuthController {
   @AllowAnon()
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  @ApiOperation({ summary: 'User login' })
+  @ApiOperation({ summary: 'User login', tags: ['auth'] })
   async signIn(
     @Body() credentials: SignInDto,
   ): Promise<ResponseTemplate<{ access_token: string }>> {
@@ -29,7 +29,7 @@ export class AuthController {
   @AllowAnon()
   @HttpCode(HttpStatus.CREATED)
   @Post('register')
-  @ApiOperation({ summary: 'User registration' })
+  @ApiOperation({ summary: 'User registration', tags: ['auth'] })
   async signUp(
     @Body() credentials: SignUpDto,
   ): Promise<ResponseTemplate<null>> {

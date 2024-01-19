@@ -5,6 +5,7 @@ import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 import { LoggerInterceptor } from './utils/interceptors/logger.interceptor';
 import { TransformInterceptor } from './utils/interceptors/transform.interceptor';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const isProduction = process.env.NODE_ENV === 'production';
@@ -30,6 +31,14 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const frontendUrl = configService.get('FRONTEND_URL');
   if (frontendUrl) app.enableCors({ origin: frontendUrl, credentials: true });
+
+  const documentConfig = new DocumentBuilder()
+    .setTitle('Masakin API')
+    .setDescription('The API for Masakin: Your Modern Recipes Repository')
+    .setVersion('1.0')
+    .build();
+  const document = SwaggerModule.createDocument(app, documentConfig);
+  SwaggerModule.setup('api-docs', app, document);
 
   await app.listen(3000);
 }

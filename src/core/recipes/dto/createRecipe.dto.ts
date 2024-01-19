@@ -1,3 +1,4 @@
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
 import {
   IsArray,
@@ -31,25 +32,30 @@ class Ingredient {
 export class CreateRecipeDto {
   @IsNotEmpty()
   @IsString()
+  @ApiProperty()
   title: string;
 
   @IsOptional()
   @IsString()
+  @ApiPropertyOptional()
   description?: string;
 
   @IsOptional()
   @IsBoolean()
   @Transform(({ value }) => Boolean(value))
+  @ApiPropertyOptional()
   vegetarian?: boolean;
 
   @IsOptional()
   @IsBoolean()
   @Transform(({ value }) => Boolean(value))
+  @ApiPropertyOptional()
   vegan?: boolean;
 
   @IsNotEmpty()
   @IsNumber()
   @Transform(({ value }) => parseInt(value))
+  @ApiProperty()
   cookDuration: number;
 
   @IsNotEmpty()
@@ -60,30 +66,36 @@ export class CreateRecipeDto {
   @IsOptional()
   @IsBoolean()
   @Transform((val) => Boolean(val))
+  @ApiPropertyOptional()
   healthy?: boolean;
 
   @IsOptional()
   @IsBoolean()
   @Transform((val) => Boolean(val))
+  @ApiPropertyOptional()
   sustainable?: boolean;
 
   @IsNotEmpty()
   @IsNumber()
   @Transform(({ value }) => parseInt(value))
+  @ApiProperty()
   servings: number;
 
   @IsOptional()
   @IsBoolean()
   @Transform((val) => Boolean(val))
+  @ApiPropertyOptional()
   dairyFree?: boolean;
 
   @IsOptional()
   @IsBoolean()
   @Transform((val) => Boolean(val))
+  @ApiPropertyOptional()
   glutenFree?: boolean;
 
   @IsNotEmpty()
   @IsString()
+  @ApiProperty({ description: 'Stringified version of the ingredients object' })
   ingredientsString: string;
 
   @IsArray()
