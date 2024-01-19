@@ -79,24 +79,28 @@ export class RecipesController {
 
     if (!imageUrl) throw new ConflictException();
 
+    const recipeData = {
+      author: { connect: { id: user.sub } },
+      title: data.title,
+      description: data.description ?? null,
+      vegetarian: Boolean(data.vegetarian),
+      vegan: Boolean(data.vegan),
+      cookDuration: data.cookDuration,
+      price: data.price,
+      healthy: Boolean(data.healthy),
+      sustainable: Boolean(data.sustainable),
+      servings: data.servings,
+      dairyFree: Boolean(data.dairyFree),
+      glutenFree: Boolean(data.glutenFree),
+      imageUrl,
+      ingredients: { createMany: { data: [...data.ingredients] } },
+    };
+
+    const result = await this.recipesService.createRecipe(recipeData);
+
     return {
       message: 'Created recipe successfully',
-      result: await this.recipesService.createRecipe({
-        author: { connect: { id: user.sub } },
-        title: data.title,
-        description: data.description ?? null,
-        vegetarian: Boolean(data.vegetarian),
-        vegan: Boolean(data.vegan),
-        cookDuration: data.cookDuration,
-        price: data.price,
-        healthy: Boolean(data.healthy),
-        sustainable: Boolean(data.sustainable),
-        servings: data.servings,
-        dairyFree: Boolean(data.dairyFree),
-        glutenFree: Boolean(data.glutenFree),
-        imageUrl,
-        ingredients: { createMany: { data: [...data.ingredients] } },
-      }),
+      result,
     };
   }
 
