@@ -96,7 +96,7 @@ export class RecipesController {
       dairyFree: Boolean(data.dairyFree),
       glutenFree: Boolean(data.glutenFree),
       imageUrl,
-      ingredients: { createMany: { data: [...data.ingredients] } },
+      ingredients: JSON.stringify(data.ingredients),
     };
 
     const result = await this.recipesService.createRecipe(recipeData);
@@ -130,10 +130,8 @@ export class RecipesController {
       sustainable: Boolean(data.sustainable),
       servings: data.servings,
       dairyFree: Boolean(data.dairyFree),
-      glutenFree: Boolean(data.glutenFree),
-      ingredients: {
-        updateMany: { where: { recipeId: id }, data: data.ingredients },
-      },
+      glutenFree: Boolean(data.glutenFree), 
+      ingredients: JSON.stringify(data.ingredients)
     };
 
     if (image) {

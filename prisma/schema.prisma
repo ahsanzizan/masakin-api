@@ -30,9 +30,9 @@ model User {
 }
 
 model Recipe {
-  id           String       @id @default(uuid())
+  id           String    @id @default(uuid())
   title        String
-  description  String?      @db.Text()
+  description  String?   @db.Text()
   vegetarian   Boolean
   vegan        Boolean
   cookDuration Int
@@ -42,11 +42,11 @@ model Recipe {
   servings     Int
   dairyFree    Boolean
   glutenFree   Boolean
-  ingredients  Ingredient[]
+  ingredients  String? // Will be an object with type 'Ingredient[]' 
   imageUrl     String
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime?    @updatedAt
-  author       User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime? @updatedAt
+  author       User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId     String
   comments     Comment[]
   Like         Like[]
@@ -88,16 +88,4 @@ model Followership {
 
   @@unique([followerId, followingId])
   @@map("followerships")
-}
-
-model Ingredient {
-  id        String @id @default(uuid())
-  name      String
-  amount    Int
-  unit      String
-  unitShort String
-  Recipe    Recipe @relation(fields: [recipeId], references: [id])
-  recipeId  String
-
-  @@map("ingredients")
 }

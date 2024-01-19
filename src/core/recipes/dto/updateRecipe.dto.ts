@@ -1,37 +1,33 @@
 import { Transform, Type } from 'class-transformer';
 import {
-  IsArray,
-  IsBoolean,
-  IsInt,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-  IsUUID,
-  ValidateNested,
+    IsArray,
+    IsBoolean,
+    IsInt,
+    IsNotEmpty,
+    IsNumber,
+    IsOptional,
+    IsString,
+    ValidateNested
 } from 'class-validator';
 
+
 class Ingredient {
-  @IsNotEmpty()
-  @IsUUID()
-  id?: string;
-
-  @IsOptional()
-  @IsString()
-  name?: string;
-
-  @IsOptional()
-  @IsInt()
-  amount?: number;
-
-  @IsOptional()
-  @IsString()
-  unit?: string;
-
-  @IsOptional()
-  @IsString()
-  unitShort?: string;
-}
+    @IsNotEmpty()
+    @IsString()
+    name: string;
+  
+    @IsNotEmpty()
+    @IsInt()
+    amount: number;
+  
+    @IsNotEmpty()
+    @IsString()
+    unit: string;
+  
+    @IsNotEmpty()
+    @IsString()
+    unitShort: string;
+  }
 
 export class UpdateRecipeDto {
   @IsOptional()
