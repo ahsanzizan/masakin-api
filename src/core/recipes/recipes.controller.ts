@@ -130,8 +130,8 @@ export class RecipesController {
       sustainable: Boolean(data.sustainable),
       servings: data.servings,
       dairyFree: Boolean(data.dairyFree),
-      glutenFree: Boolean(data.glutenFree), 
-      ingredients: JSON.stringify(data.ingredients)
+      glutenFree: Boolean(data.glutenFree),
+      ingredients: JSON.stringify(data.ingredients),
     };
 
     if (image) {
