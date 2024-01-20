@@ -44,7 +44,7 @@ export class RecipesController {
     @Query('page') page?: number,
   ): Promise<ResponseTemplate<PaginatedResult<Recipe>>> {
     return {
-      message: 'Retrieved users successfully',
+      message: 'Retrieved recipes successfully',
       result: await this.recipesService.getRecipes({
         page,
       }),
@@ -100,11 +100,9 @@ export class RecipesController {
       ingredients: JSON.stringify(data.ingredients),
     };
 
-    const result = await this.recipesService.createRecipe(recipeData);
-
     return {
       message: 'Created recipe successfully',
-      result,
+      result: await this.recipesService.createRecipe(recipeData),
     };
   }
 
@@ -141,11 +139,9 @@ export class RecipesController {
       recipeData.imageUrl = imageUrl;
     }
 
-    const result = await this.recipesService.updateRecipe({ id }, recipeData);
-
     return {
       message: 'Created recipe successfully',
-      result,
+      result: await this.recipesService.updateRecipe({ id }, recipeData),
     };
   }
 
@@ -164,7 +160,7 @@ export class RecipesController {
       throw new UnauthorizedException(`You are not the author of this recipe`);
 
     return {
-      message: 'Retrieved recipe successfully',
+      message: 'Deleted recipe successfully',
       result: await this.recipesService.deleteRecipe({ id }),
     };
   }
