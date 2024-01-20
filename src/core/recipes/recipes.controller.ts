@@ -126,7 +126,9 @@ export class RecipesController {
 
     const recipeData: Prisma.RecipeUpdateInput = {
       ...data,
-      ingredients: JSON.stringify(data.ingredients),
+      ingredients: data.ingredients
+        ? JSON.stringify(data.ingredients)
+        : undefined,
     };
 
     if (image) {
