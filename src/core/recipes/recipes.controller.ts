@@ -119,19 +119,15 @@ export class RecipesController {
     @Param('id') id: string,
     @UploadedFile() image?: Express.Multer.File,
   ): Promise<ResponseTemplate<Recipe>> {
+    const findRecipe = await this.recipesService.getRecipe({ id });
+    if (!findRecipe)
+      throw new NotFoundException(`No recipe found with id: ${id}`);
+
+    if (findRecipe.authorId !== user.sub)
+      throw new UnauthorizedException(`You are not the author of this recipe`);
+
     const recipeData: Prisma.RecipeUpdateInput = {
-      author: { connect: { id: user.sub } },
-      title: data.title,
-      description: data.description ?? null,
-      vegetarian: Boolean(data.vegetarian),
-      vegan: Boolean(data.vegan),
-      cookDuration: data.cookDuration,
-      price: data.price,
-      healthy: Boolean(data.healthy),
-      sustainable: Boolean(data.sustainable),
-      servings: data.servings,
-      dairyFree: Boolean(data.dairyFree),
-      glutenFree: Boolean(data.glutenFree),
+      ...data,
       ingredients: JSON.stringify(data.ingredients),
     };
 
