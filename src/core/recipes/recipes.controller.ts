@@ -81,7 +81,7 @@ export class RecipesController {
       .catch(() => {
         throw new BadRequestException('Invalid file type');
       });
-    const imageUrl = uploadImageToCloudinary.url as string;
+    const imageUrl = uploadImageToCloudinary.secure_url as string;
 
     const recipeData: Prisma.RecipeCreateInput = {
       author: { connect: { id: user.sub } },
@@ -137,7 +137,7 @@ export class RecipesController {
         .catch(() => {
           throw new BadRequestException('Invalid file type');
         });
-      const imageUrl = uploadImageToCloudinary.url as string;
+      const imageUrl = uploadImageToCloudinary.secure_url as string;
       recipeData.imageUrl = imageUrl;
     }
 

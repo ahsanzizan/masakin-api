@@ -80,7 +80,7 @@ export class UsersController {
         .catch(() => {
           throw new BadRequestException('Invalid file type');
         });
-      const avatarUrl = uploadAvatarToCloudinary.url as string;
+      const avatarUrl = uploadAvatarToCloudinary.secure_url as string;
       userUpdateData.avatar = avatarUrl;
     }
 
