@@ -40,13 +40,16 @@ export class RecipesController {
   @Get()
   @ApiOperation({ summary: 'Get all recipes (paginated)', tags: ['recipes'] })
   @ApiQuery({ name: 'page', type: String, required: false })
+  @ApiQuery({ name: 'search', type: String, required: false })
   async getAllRecipes(
     @Query('page') page?: number,
+    @Query('search') search?: string,
   ): Promise<ResponseTemplate<PaginatedResult<Recipe>>> {
     return {
       message: 'Retrieved recipes successfully',
       result: await this.recipesService.getRecipes({
         page,
+        search,
       }),
     };
   }

@@ -15,16 +15,40 @@ export class UsersService {
     where,
     orderBy,
     page,
+    search,
   }: {
     where?: Prisma.UserWhereInput;
     orderBy?: Prisma.UserOrderByWithRelationInput;
     page?: number;
+    search?: string;
   }) {
+    const searchClause: Prisma.UserWhereInput = search
+      ? {
+          OR: [
+            {
+              username: {
+                contains: search,
+                mode: 'insensitive',
+              },
+            },
+            {
+              email: {
+                contains: search,
+                mode: 'insensitive',
+              },
+            },
+          ],
+        }
+      : {};
+
     return await paginate<UserWithoutPasswordType, Prisma.UserFindManyArgs>(
       this.prismaService.user,
       { page },
       {
-        where,
+        where: {
+          ...where,
+          ...searchClause,
+        },
         orderBy,
         select: UserWithoutPassword,
       },

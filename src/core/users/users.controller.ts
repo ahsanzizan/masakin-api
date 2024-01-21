@@ -39,13 +39,16 @@ export class UsersController {
   @Get()
   @ApiOperation({ summary: 'Get all users (paginated)', tags: ['users'] })
   @ApiQuery({ name: 'page', type: String, required: false })
+  @ApiQuery({ name: 'search', type: String, required: false })
   async getUsers(
     @Query('page') page?: number,
+    @Query('search') search?: string,
   ): Promise<ResponseTemplate<PaginatedResult<UserWithoutPasswordType>>> {
     return {
       message: 'Retrieved users successfully',
       result: await this.usersService.getUsers({
         page,
+        search,
       }),
     };
   }
