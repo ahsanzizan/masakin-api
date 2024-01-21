@@ -14,16 +14,41 @@ export class RecipesService {
     orderBy,
     page,
     select,
+    search,
   }: {
     where?: Prisma.RecipeWhereInput;
     orderBy?: Prisma.RecipeOrderByWithRelationInput;
     page?: number;
     select?: Prisma.RecipeSelect;
+    search?: string;
   }) {
+    const searchClause: Prisma.RecipeWhereInput = search
+      ? {
+          OR: [
+            {
+              author: {
+                username: {
+                  contains: search,
+                  mode: 'insensitive',
+                },
+              },
+              title: {
+                contains: search,
+                mode: 'insensitive',
+              },
+              description: {
+                contains: search,
+                mode: 'insensitive',
+              },
+            },
+          ],
+        }
+      : {};
+
     return await paginate<Recipe, Prisma.RecipeFindManyArgs>(
       this.prismaService.recipe,
       { page },
-      { where, orderBy, select },
+      { where: { ...where, ...searchClause }, orderBy, select },
     );
   }
 
