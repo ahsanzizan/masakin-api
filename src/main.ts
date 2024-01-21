@@ -1,11 +1,10 @@
 import { LogLevel, ValidationPipe, VersioningType } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 import { LoggerInterceptor } from './utils/interceptors/logger.interceptor';
 import { TransformInterceptor } from './utils/interceptors/transform.interceptor';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const isProduction = process.env.NODE_ENV === 'production';
@@ -28,9 +27,7 @@ async function bootstrap() {
 
   app.enableVersioning({ type: VersioningType.URI });
 
-  const configService = app.get(ConfigService);
-  const frontendUrl = configService.get('FRONTEND_URL');
-  if (frontendUrl) app.enableCors({ origin: frontendUrl, credentials: true });
+  app.enableCors();
 
   const documentConfig = new DocumentBuilder()
     .setTitle('Masakin API')
