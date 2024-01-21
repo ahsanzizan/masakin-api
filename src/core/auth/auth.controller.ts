@@ -14,9 +14,15 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('login')
   @ApiOperation({ summary: 'User login', tags: ['auth'] })
-  async signIn(
-    @Body() credentials: SignInDto,
-  ): Promise<ResponseTemplate<{ access_token: string }>> {
+  async signIn(@Body() credentials: SignInDto): Promise<
+    ResponseTemplate<{
+      sub: string;
+      createdAt: Date;
+      username: string;
+      email: string;
+      access_token: string;
+    }>
+  > {
     return {
       message: 'Logged in successfully',
       result: await this.authService.signIn(
