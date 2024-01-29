@@ -41,7 +41,7 @@
   "devDependencies": {
     "@nestjs/cli": "^10.3.0",
     "@nestjs/schematics": "^10.1.0",
-    "@nestjs/testing": "^10.0.0",
+    "@nestjs/testing": "^10.3.1",
     "@types/bcrypt": "^5.0.2",
     "@types/buffer-to-stream": "^1.0.3",
     "@types/cookie-parser": "^1.4.6",
