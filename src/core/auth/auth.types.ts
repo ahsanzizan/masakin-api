@@ -1,6 +1,8 @@
 export interface AuthUser {
   sub: string;
-  createdAt: Date;
   username: string;
   email: string;
+  avatar: string | null;
+  createdAt: Date;
+  updatedAt: Date | null;
 }

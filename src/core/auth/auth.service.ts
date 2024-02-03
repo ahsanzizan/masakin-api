@@ -49,7 +49,7 @@ export class AuthService {
     const { password, id, bio, ...userInfo } = findUser;
 
     const payload: AuthUser = {
-      sub: findUser.id,
+      sub: id,
       ...userInfo,
     };
 

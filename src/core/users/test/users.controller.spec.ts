@@ -1,14 +1,14 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import { User } from '@prisma/client';
+import { CloudinaryService } from 'src/lib/cloudinary/cloudinary.service';
 import { PaginatedResult } from 'src/lib/prisma/paginator';
 import { UserWithoutPasswordType } from 'src/types/users.types';
 import { ResponseTemplate } from 'src/utils/interceptors/transform.interceptor';
+import { authUserMock } from 'src/utils/mocks/auth.mocks';
 import { UsersController } from '../users.controller';
 import { UsersService } from '../users.service';
 import { paginatedUsersSeeder, userSeeder } from './fixtures';
-import { User } from '@prisma/client';
-import { authUserMock } from 'src/utils/mocks/auth.mocks';
-import { CloudinaryService } from 'src/lib/cloudinary/cloudinary.service';
 
 const service = {
   getUsers: jest.fn().mockResolvedValue(paginatedUsersSeeder),
@@ -105,6 +105,8 @@ describe('UsersController', () => {
           username: userSeeder.username,
           email: userSeeder.email,
           createdAt: userSeeder.createdAt,
+          updatedAt: userSeeder.updatedAt,
+          avatar: userSeeder.avatar,
         }),
       ).toEqual(result);
     });

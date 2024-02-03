@@ -20,6 +20,7 @@ export class AuthController {
       createdAt: Date;
       username: string;
       email: string;
+      avatar: string | null;
       access_token: string;
     }>
   > {
