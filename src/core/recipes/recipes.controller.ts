@@ -21,19 +21,22 @@ import { ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { Prisma, Recipe } from '@prisma/client';
 import { CloudinaryService } from 'src/lib/cloudinary/cloudinary.service';
 import { PaginatedResult } from 'src/lib/prisma/paginator';
+import { LikesWithRecipes } from 'src/types/likes.type';
 import { FileSizeGuard } from 'src/utils/guards/fileSize.guard';
 import { ResponseTemplate } from 'src/utils/interceptors/transform.interceptor';
 import { UseAuth } from '../auth/auth.decorator';
 import { AuthUser } from '../auth/auth.types';
+import { LikesService } from '../likes/likes.service';
 import { CreateRecipeDto } from './dto/createRecipe.dto';
-import { RecipesService } from './recipes.service';
 import { UpdateRecipeDto } from './dto/updateRecipe.dto';
+import { RecipesService } from './recipes.service';
 
 @Controller('recipes')
 export class RecipesController {
   constructor(
     private readonly recipesService: RecipesService,
     private readonly cloudinaryService: CloudinaryService,
+    private readonly likesService: LikesService,
   ) {}
 
   @HttpCode(HttpStatus.OK)
@@ -66,6 +69,21 @@ export class RecipesController {
     return {
       message: 'Retrieved recipe successfully',
       result: recipe,
+    };
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Get(':id/likes')
+  @ApiOperation({ summary: "Get a recipe's likes by id", tags: ['recipes'] })
+  async getRecipeLikes(
+    @Param('id') id: string,
+    @Query('page') page?: number,
+  ): Promise<ResponseTemplate<PaginatedResult<LikesWithRecipes>>> {
+    const recipeLikes = await this.likesService.getRecipeLikes(id, page);
+
+    return {
+      message: "Retrieved recipe's likes successfully",
+      result: recipeLikes,
     };
   }
 

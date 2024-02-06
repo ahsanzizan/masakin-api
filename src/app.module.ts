@@ -5,6 +5,7 @@ import { FollowershipsModule } from './core/followerships/followerships.module';
 import { UsersModule } from './core/users/users.module';
 import { CloudinaryModule } from './lib/cloudinary/cloudinary.module';
 import { RecipesModule } from './core/recipes/recipes.module';
+import { LikesModule } from './core/likes/likes.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { RecipesModule } from './core/recipes/recipes.module';
     CloudinaryModule,
     FollowershipsModule,
     RecipesModule,
+    LikesModule,
   ],
   providers: [],
 })

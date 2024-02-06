@@ -9,6 +9,7 @@ import { authUserMock } from 'src/utils/mocks/auth.mocks';
 import { UsersController } from '../users.controller';
 import { UsersService } from '../users.service';
 import { paginatedUsersSeeder, userSeeder } from './fixtures';
+import { LikesService } from 'src/core/likes/likes.service';
 
 const service = {
   getUsers: jest.fn().mockResolvedValue(paginatedUsersSeeder),
@@ -29,6 +30,7 @@ describe('UsersController', () => {
           useValue: service,
         },
         CloudinaryService,
+        { provide: LikesService, useValue: jest.fn() },
       ],
     }).compile();
 

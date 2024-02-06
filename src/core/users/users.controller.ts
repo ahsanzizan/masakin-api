@@ -14,25 +14,28 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { Prisma, User } from '@prisma/client';
+import { CloudinaryService } from 'src/lib/cloudinary/cloudinary.service';
 import { PaginatedResult } from 'src/lib/prisma/paginator';
+import { LikesWithUsers } from 'src/types/likes.type';
 import { UserWithoutPasswordType } from 'src/types/users.types';
+import { FileSizeGuard } from 'src/utils/guards/fileSize.guard';
 import { ResponseTemplate } from 'src/utils/interceptors/transform.interceptor';
 import { UserWithoutPassword } from 'src/utils/selector.utils';
 import { UseAuth } from '../auth/auth.decorator';
 import { AuthUser } from '../auth/auth.types';
+import { LikesService } from '../likes/likes.service';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import { UsersService } from './users.service';
-import { CloudinaryService } from 'src/lib/cloudinary/cloudinary.service';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { FileSizeGuard } from 'src/utils/guards/fileSize.guard';
 
 @Controller('users')
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
     private readonly cloudinaryService: CloudinaryService,
+    private readonly likesService: LikesService,
   ) {}
 
   @HttpCode(HttpStatus.OK)
@@ -63,6 +66,21 @@ export class UsersController {
     if (!user) throw new NotFoundException(`No user found with id: ${id}`);
 
     return { message: 'Retrieved user successfully', result: user };
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Get(':id/likes')
+  @ApiOperation({ summary: "Get a user's likes by id", tags: ['users'] })
+  async getLikesById(
+    @Param('id') id: string,
+    @Query('page') page?: number,
+  ): Promise<ResponseTemplate<PaginatedResult<LikesWithUsers>>> {
+    const userLikes = await this.likesService.likedByUser(id, page);
+
+    return {
+      message: "Retrieved user's likes successfully",
+      result: userLikes,
+    };
   }
 
   @HttpCode(HttpStatus.OK)

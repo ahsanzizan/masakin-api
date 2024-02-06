@@ -49,7 +49,7 @@ model Recipe {
   author       User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId     String
   comments     Comment[]
-  Like         Like[]
+  likes        Like[]
 
   @@map("recipes")
 }
