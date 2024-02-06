@@ -88,6 +88,30 @@ export class RecipesController {
   }
 
   @HttpCode(HttpStatus.CREATED)
+  @Post('like/:id')
+  @ApiOperation({ summary: 'Likes a user', tags: ['recipes'] })
+  async likeRecipe(
+    @Param('id') id: string,
+    @UseAuth() user: AuthUser,
+  ): Promise<ResponseTemplate<null>> {
+    await this.likesService.like(id, user.sub);
+
+    return { message: 'Liked a recipe successfully', result: null };
+  }
+
+  @HttpCode(HttpStatus.CREATED)
+  @Delete('like/:id')
+  @ApiOperation({ summary: 'Unlikes a user', tags: ['recipes'] })
+  async unlikeRecipe(
+    @Param('id') id: string,
+    @UseAuth() user: AuthUser,
+  ): Promise<ResponseTemplate<null>> {
+    await this.likesService.unlike(id, user.sub);
+
+    return { message: 'Unliked a recipe successfully', result: null };
+  }
+
+  @HttpCode(HttpStatus.CREATED)
   @Post()
   @ApiOperation({ summary: 'Create a new recipe', tags: ['recipes'] })
   @UseGuards(new FileSizeGuard(5 * 1024 * 1024))
