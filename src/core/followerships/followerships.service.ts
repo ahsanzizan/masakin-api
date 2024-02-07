@@ -1,7 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Followership, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { paginator } from 'src/lib/prisma/paginator';
 import { PrismaService } from 'src/lib/prisma/prisma.service';
+import {
+  FollowershipWithFollower,
+  FollowershipWithFollowing,
+} from 'src/types/followerships.type';
 import { UserWithoutPassword } from 'src/utils/selector.utils';
 import { validateEntityById } from 'src/utils/validators.utils';
 
@@ -12,7 +16,10 @@ export class FollowershipsService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async getFollowers(userId: string, page?: number) {
-    return await paginate<Followership, Prisma.FollowershipFindManyArgs>(
+    return await paginate<
+      FollowershipWithFollower,
+      Prisma.FollowershipFindManyArgs
+    >(
       this.prismaService.followership,
       { page },
       {
@@ -23,7 +30,10 @@ export class FollowershipsService {
   }
 
   async getFollowings(userId: string, page?: number) {
-    return await paginate<Followership, Prisma.FollowershipFindManyArgs>(
+    return await paginate<
+      FollowershipWithFollowing,
+      Prisma.FollowershipFindManyArgs
+    >(
       this.prismaService.followership,
       { page },
       {

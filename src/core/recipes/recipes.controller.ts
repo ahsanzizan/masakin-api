@@ -21,7 +21,7 @@ import { ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { Prisma, Recipe } from '@prisma/client';
 import { CloudinaryService } from 'src/lib/cloudinary/cloudinary.service';
 import { PaginatedResult } from 'src/lib/prisma/paginator';
-import { LikesWithRecipes } from 'src/types/likes.type';
+import { LikeWithRecipe } from 'src/types/likes.type';
 import { FileSizeGuard } from 'src/utils/guards/fileSize.guard';
 import { ResponseTemplate } from 'src/utils/interceptors/transform.interceptor';
 import { UseAuth } from '../auth/auth.decorator';
@@ -78,7 +78,7 @@ export class RecipesController {
   async getRecipeLikes(
     @Param('id') id: string,
     @Query('page') page?: number,
-  ): Promise<ResponseTemplate<PaginatedResult<LikesWithRecipes>>> {
+  ): Promise<ResponseTemplate<PaginatedResult<LikeWithRecipe>>> {
     const recipeLikes = await this.likesService.getRecipeLikes(id, page);
 
     return {

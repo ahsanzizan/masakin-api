@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { PrismaModule } from 'src/lib/prisma/prisma.module';
-import { UsersController } from './users.controller';
 import { CloudinaryModule } from 'src/lib/cloudinary/cloudinary.module';
-import { LikesService } from '../likes/likes.service';
+import { PrismaModule } from 'src/lib/prisma/prisma.module';
+import { LikesModule } from '../likes/likes.module';
+import { UsersController } from './users.controller';
+import { UsersService } from './users.service';
 
 @Module({
-  imports: [PrismaModule, CloudinaryModule, LikesService],
+  imports: [PrismaModule, CloudinaryModule, LikesModule],
   providers: [UsersService],
   exports: [UsersService],
   controllers: [UsersController],

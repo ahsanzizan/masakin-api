@@ -19,7 +19,7 @@ import { ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { Prisma, User } from '@prisma/client';
 import { CloudinaryService } from 'src/lib/cloudinary/cloudinary.service';
 import { PaginatedResult } from 'src/lib/prisma/paginator';
-import { LikesWithUsers } from 'src/types/likes.type';
+import { LikeWithUser } from 'src/types/likes.type';
 import { UserWithoutPasswordType } from 'src/types/users.types';
 import { FileSizeGuard } from 'src/utils/guards/fileSize.guard';
 import { ResponseTemplate } from 'src/utils/interceptors/transform.interceptor';
@@ -74,7 +74,7 @@ export class UsersController {
   async getLikesById(
     @Param('id') id: string,
     @Query('page') page?: number,
-  ): Promise<ResponseTemplate<PaginatedResult<LikesWithUsers>>> {
+  ): Promise<ResponseTemplate<PaginatedResult<LikeWithUser>>> {
     const userLikes = await this.likesService.likedByUser(id, page);
 
     return {

@@ -12,6 +12,10 @@ import { ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { Followership } from '@prisma/client';
 import { AuthUser } from 'src/core/auth/auth.types';
 import { PaginatedResult } from 'src/lib/prisma/paginator';
+import {
+  FollowershipWithFollower,
+  FollowershipWithFollowing,
+} from 'src/types/followerships.type';
 import { ResponseTemplate } from 'src/utils/interceptors/transform.interceptor';
 import { UseAuth } from '../auth/auth.decorator';
 import { FollowershipsService } from './followerships.service';
@@ -30,7 +34,7 @@ export class FollowershipsController {
   async getFollowers(
     @UseAuth() user: AuthUser,
     @Query('page') page?: number,
-  ): Promise<ResponseTemplate<PaginatedResult<Followership>>> {
+  ): Promise<ResponseTemplate<PaginatedResult<FollowershipWithFollower>>> {
     return {
       message: 'Retrieved followers successfully',
       result: await this.followershipsService.getFollowers(user.sub, page),
@@ -47,7 +51,7 @@ export class FollowershipsController {
   async getFollowersByUserId(
     @Param('id') id: string,
     @Query('page') page?: number,
-  ): Promise<ResponseTemplate<PaginatedResult<Followership>>> {
+  ): Promise<ResponseTemplate<PaginatedResult<FollowershipWithFollower>>> {
     return {
       message: 'Retrieved followers successfully',
       result: await this.followershipsService.getFollowers(id, page),
@@ -64,7 +68,7 @@ export class FollowershipsController {
   async getFollowings(
     @UseAuth() user: AuthUser,
     @Query('page') page?: number,
-  ): Promise<ResponseTemplate<PaginatedResult<Followership>>> {
+  ): Promise<ResponseTemplate<PaginatedResult<FollowershipWithFollowing>>> {
     return {
       message: 'Retrieved followings successfully',
       result: await this.followershipsService.getFollowings(user.sub, page),

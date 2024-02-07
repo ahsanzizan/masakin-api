@@ -1,6 +1,6 @@
 import { Recipe, User } from '@prisma/client';
 
-export type LikesWithRecipes = {
+export type LikeWithRecipe = {
   id: string;
   createdAt: Date;
   userId: string;
@@ -8,7 +8,7 @@ export type LikesWithRecipes = {
   recipe: Recipe;
 };
 
-export type LikesWithUsers = {
+export type LikeWithUser = {
   id: string;
   createdAt: Date;
   userId: string;

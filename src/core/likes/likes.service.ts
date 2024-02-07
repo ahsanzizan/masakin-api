@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { paginator } from 'src/lib/prisma/paginator';
 import { PrismaService } from 'src/lib/prisma/prisma.service';
-import { LikesWithRecipes, LikesWithUsers } from 'src/types/likes.type';
+import { LikeWithRecipe, LikeWithUser } from 'src/types/likes.type';
 import { UserWithoutPassword } from 'src/utils/selector.utils';
 import { validateEntityById } from 'src/utils/validators.utils';
 
@@ -13,7 +13,7 @@ export class LikesService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async getRecipeLikes(recipeId: string, page?: number) {
-    return await paginate<LikesWithRecipes, Prisma.LikeFindManyArgs>(
+    return await paginate<LikeWithRecipe, Prisma.LikeFindManyArgs>(
       this.prismaService.like,
       { page },
       {
@@ -24,7 +24,7 @@ export class LikesService {
   }
 
   async likedByUser(userId: string, page?: number) {
-    return await paginate<LikesWithUsers, Prisma.LikeFindManyArgs>(
+    return await paginate<LikeWithUser, Prisma.LikeFindManyArgs>(
       this.prismaService.like,
       { page },
       {
