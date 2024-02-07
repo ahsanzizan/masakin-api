@@ -39,6 +39,12 @@ export class LikesService {
     if (!(await validateEntityById(recipeId, 'Recipe')))
       throw new NotFoundException(`No recipe found with id: ${recipeId}`);
 
+    // Update likes count
+    await this.prismaService.recipe.update({
+      where: { id: recipeId },
+      data: { likesCount: { increment: 1 } },
+    });
+
     return await this.prismaService.like.create({ data: { recipeId, userId } });
   }
 
@@ -46,6 +52,12 @@ export class LikesService {
   async unlike(recipeId: string, userId: string) {
     if (!(await validateEntityById(recipeId, 'Recipe')))
       throw new NotFoundException(`No recipe found with id: ${recipeId}`);
+
+    // Update likes count
+    await this.prismaService.recipe.update({
+      where: { id: recipeId },
+      data: { likesCount: { decrement: 1 } },
+    });
 
     return await this.prismaService.like.delete({
       where: {
