@@ -6,6 +6,7 @@ import { UsersModule } from './core/users/users.module';
 import { CloudinaryModule } from './lib/cloudinary/cloudinary.module';
 import { RecipesModule } from './core/recipes/recipes.module';
 import { LikesModule } from './core/likes/likes.module';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { LikesModule } from './core/likes/likes.module';
     RecipesModule,
     LikesModule,
   ],
+  controllers: [AppController],
   providers: [],
 })
 export class AppModule {}
