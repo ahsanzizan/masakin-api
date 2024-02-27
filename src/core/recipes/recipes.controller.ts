@@ -44,13 +44,16 @@ export class RecipesController {
   @ApiOperation({ summary: 'Get all recipes (paginated)', tags: ['recipes'] })
   @ApiQuery({ name: 'page', type: String, required: false })
   @ApiQuery({ name: 'search', type: String, required: false })
+  @ApiQuery({ name: 'country', type: String, required: false })
   async getAllRecipes(
     @Query('page') page?: number,
     @Query('search') search?: string,
+    @Query('country') country?: string,
   ): Promise<ResponseTemplate<PaginatedResult<Recipe>>> {
     return {
       message: 'Retrieved recipes successfully',
       result: await this.recipesService.getRecipes({
+        where: { country },
         page,
         search,
       }),
@@ -143,6 +146,7 @@ export class RecipesController {
       glutenFree: Boolean(data.glutenFree),
       imageUrl,
       ingredients: JSON.stringify(data.ingredients),
+      country: data.country,
     };
 
     return {

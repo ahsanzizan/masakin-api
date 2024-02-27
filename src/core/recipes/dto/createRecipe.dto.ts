@@ -108,4 +108,11 @@ export class CreateRecipeDto {
       return [];
     }
   }
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({
+    description: 'Country where the food originally produced',
+  })
+  country: string;
 }
