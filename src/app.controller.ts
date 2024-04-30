@@ -6,7 +6,7 @@ export class AppController {
   @HttpCode(HttpStatus.OK)
   @Get()
   @AllowAnon()
-  async getRecipeById() {
+  async root() {
     return {
       message: 'Welcome to Masakin Official API',
       version: '1.0',
